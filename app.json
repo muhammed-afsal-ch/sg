@@ -13,9 +13,22 @@
         {
           "origin": "https://n"
         }
-      ]
+      ],
+      "@config-plugins/react-native-blob-util",
+      "expo-asset"
     ],
     "name": "new",
-    "slug": "new"
+    "slug": "new",
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "6187cc9a-8332-4bee-9d0e-f53fbda572fe"
+      }
+    },
+    "android": {
+      "package": "com.pixelbay.sargalayam"
+    }
   }
 }
