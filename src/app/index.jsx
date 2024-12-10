@@ -39,10 +39,6 @@ const Welcome = () => {
     }
   }, [isFirstTime]);
 
-  // If it's the first time, show onboarding
-  if (isFirstTime) {
-    router.push("/onboarding"); // Navigate to the onboarding screen
-  }
 
   return (
     <SafeAreaView className="bg-primary h-full">

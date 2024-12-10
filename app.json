@@ -17,18 +17,31 @@
       "@config-plugins/react-native-blob-util",
       "expo-asset"
     ],
-    "name": "new",
-    "slug": "new",
+    "name": "Sargalayam",
+    "slug": "sargalayam",
+    "icon": "./src/assets/icon.png",
     "extra": {
       "router": {
         "origin": "https://n"
       },
       "eas": {
-        "projectId": "6187cc9a-8332-4bee-9d0e-f53fbda572fe"
+        "projectId": "d7be1547-1de0-4f02-a945-84e41717113a"
       }
     },
     "android": {
-      "package": "com.pixelbay.sargalayam"
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.pixelbay.sargalayam",
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
     }
   }
 }

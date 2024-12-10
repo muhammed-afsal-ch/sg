@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList,Pressable,Linking, Image, RefreshControl, Text, TouchableOpacity, View, BackHandler } from "react-native";
+import { FlatList, Pressable, Linking, Image, RefreshControl, Text, TouchableOpacity, View, BackHandler } from "react-native";
 import { icons, images } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
 import { getAllPosts, getLatestThreePosts, getItemByItemcode, getLatestPosts } from "../../lib/appwrite";
@@ -9,20 +9,25 @@ import { router } from "expo-router";
 import { FloatingAction } from "react-native-floating-action";
 import Bubble from "@/components/Bubble";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useGlobalContext } from "../../context/Globalprovider";
+import PostCard from "@/components/PostCard";
+
 
 //background-image: linear-gradient(90deg, #ea8f23, #ea3650 33%, #2075bc 66%, #09abb1);
 //https://www.youtube.com/watch?v=upccWfK_0DI
 // /https://www.geeksforgeeks.org/how-to-convert-an-expo-app-to-apk-in-react-native-for-android/
 // "expo-av": "~13.10.5","~13.4.1"
 const Home = () => {
-  const { data: posts } = useAppwrite(getAllPosts);
-  const { data: latestAllResults,refetch } = useAppwrite(getLatestThreePosts);
+  const { user } = useGlobalContext();
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
+
+  const [hilights, setHilights] = useState([]);
+
+  const { data: latestAllResults } = useAppwrite(getLatestThreePosts);
   const [fullResults, setFullResults] = useState([]);
 
 
-  const { data: latestPosts } = useAppwrite(getLatestPosts);
   const [isClicked, setIsClicked] = useState(false);
-
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
@@ -36,27 +41,28 @@ const Home = () => {
       text: "Accessibility",
       icon: icons.connect,
       name: "bt_accessibility",
-      position: 2
-    },
-    {
-      text: "Language",
-      icon: icons.message,
-      name: "bt_language",
       position: 1
     },
     {
-      text: "Location",
-      icon: icons.score,
-      name: "bt_room",
+      text: "Create Post",
+      icon: icons.plus,
+      name: "createpost",
+      position:2
+    },
+    {
+      text: "Add Result",
+      icon: icons.result,
+      name: "addresult",
       position: 3
     },
     {
-      text: "Video",
+      text: "Hilights Video",
       icon: icons.plus,
-      name: "bt_videocam",
+      name: "createvideo",
       position: 4
     }
   ];
+
   useEffect(() => {
     const fetchAdditionalData = async () => {
       if (!latestAllResults) return;
@@ -68,7 +74,7 @@ const Home = () => {
             const { itemlabel, category_code } = await getItemByItemcode(item.itemcode);
             return {
               ...item,
-              itemlabel, 
+              itemlabel,
               category_code
             };
           } catch (error) {
@@ -78,7 +84,14 @@ const Home = () => {
         })
       );
 
+      const getHilights= async()=>{
+        getLatestPosts().then((data)=>{
+          setHilights(data)
+        })
+      }
+
       setFullResults(updatedResults);
+      getHilights()
     };
 
     fetchAdditionalData();
@@ -107,18 +120,42 @@ const Home = () => {
     return () => backHandler.remove();
   }, []);
 
+
+  const [isDoubleClicked, setIsDoubleClicked] = useState(false);
+  const timerRef = useRef(null);
+
+  const handleSingleClick = () => {
+    router.push("/sign-in")
+  };
+
+  const handleDoubleClick = () => {
+    Linking.openURL("https://sargalayam.in")
+  };
+
+  const handleLongPress = () => {
+    if (!isDoubleClicked) {
+      timerRef.current = setTimeout(() => {
+        handleSingleClick();
+      }, 3000);
+    }
+  };
+
+  const handlePressIn = () => {
+    clearTimeout(timerRef.current);
+  };
+
+
   return (
     <SafeAreaView className="bg-primary">
+
       <FlatList
-      className=""
-        data={fullResults}
+        className=""
+        data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <VideoCard
-          item_code={item.itemcode}
-          item_name={item.itemlabel}
-          thumbnail={item.resultimage}
-          category={item.category_code}
+          <PostCard
+            caption={item.caption}
+            thumbnail={item.thumbnail}
           />
         )}
         ListHeaderComponent={() => (
@@ -138,29 +175,28 @@ const Home = () => {
                 />
               </View>
 
-              <Pressable className="mt-1 mr-2 "
-                 onPress={() => Linking.openURL("https://sargalayam.in")}               
-                 onLongPress={()=>{
-                  ()=> router.push('/sign-in')
-                 }}   
-                 delayLongPress={800} 
+              <TouchableOpacity
+                activeOpacity={1}
+                onLongPress={handleLongPress}
+                onPressIn={handlePressIn}
+                onPress={handleDoubleClick}
               >
                 <Image
                   source={images.sargalayamlogo}
-                  className="w-9 h-10"
+                  className="w-10 h-10 rounded-full"
                   resizeMode="contain"
                 />
-              </Pressable>
+              </TouchableOpacity>
             </View>
 
             <SearchInput />
             <View className="mt-2 flex flex-row items-center justify-between gap-2">
               <View className="border-2 border-black-200 rounded-xl">
                 <TouchableOpacity
-                  onPress={() => router.push("/manual")} //onboarding
+                  onPress={() => router.push("/downloads")} 
                 >
                   <View className="flex flex-row items-center h-10 px-6 bg-black-100 border-1 border-black-200 rounded-xl">
-                    <Text className="text-white font-semibold">Manual</Text>
+                    <Text className="text-white font-semibold">Downloads</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -169,7 +205,7 @@ const Home = () => {
                   onPress={() => router.push("/quiz")}
                 >
                   <View className="flex flex-row items-center h-10 px-6 bg-black-100 border-1 border-black-200 rounded-xl">
-                  {isClicked === false && (
+                    {isClicked === false && (
                       <View className="absolute top-0 right-0">
                         <Bubble />
                       </View>
@@ -194,14 +230,14 @@ const Home = () => {
                 Highlights
               </Text>
 
-              <Trending posts={latestPosts ?? []} />
+              <Trending posts={hilights ?? []} />
             </View>
           </View>
         )}
         ListEmptyComponent={() => (
           <EmptyState
             title="No Results Found"
-            subtitle="No Results ulpaded yet"
+            subtitle="No Results uploaded yet"
           />
         )}
         refreshControl={
@@ -209,19 +245,22 @@ const Home = () => {
         }
       />
 
-      {/* Floating Action Button */}
-      <FloatingAction
-        actions={actions}
-        onPressItem={name => {
-          console.log(`selected button: ${name}`);
-        }}
-        style={{
-          position: 'absolute',
-          bottom: 30,
-          right: 20,
-          zIndex: 999,
-        }}
-      />
+      {user && (
+        <FloatingAction
+          actions={actions}
+          onPressItem={name => {
+            console.log(`selected button: ${name}`);
+            router.push(`/admin/${name}`)
+          }}
+          style={{
+            position: 'absolute',
+            bottom: 30,
+            right: 20,
+            zIndex: 999,
+          }}
+        />
+      )}
+
     </SafeAreaView>
   );
 };

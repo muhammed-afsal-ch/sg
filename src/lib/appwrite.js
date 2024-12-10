@@ -1,19 +1,23 @@
 import { Client, Account, ID, Avatars, Databases, Query, Storage } from 'react-native-appwrite';
 
+
 export const config = {
   endpoint: 'https://cloud.appwrite.io/v1',
   platform: 'com.pixelbay.sargalayam',
   projectId: 'skssfsargalayalmsargalayalamskssfnew',
   databaseId: '674c26af0027e72b8c9c',
   userCollectionId: '674c27e9000fff2fb264',
-  videoCollectionoid: '674c29070036cdb3ee5e',
+  videoCollectionoid: '6755623b0013070777bc',
   questionsCollectionId: '674c2a0d0035ec0b02b8',
   quizResponseCollectionId: '674d369300129f0084f9',
   programsCollectionId: '674c2c060001f1f3dd05',
   districtsCollectionId: "674c2ca100265cbd5cc2",
-  resultsCollectionId: "674c2dab0023b4c3d726",
+  resultsCollectionId: "6753c04b001397d9613e",
   messageCollectionId: "674d817e00008f5203d5",
-  galleryStorageId:"674e76b20013b1d3dcb4",
+  settingsCollectionId:"67556fe5001614d4bf88",
+  downloadsCollectionId:"675585c8000dea692e41",
+  galleryStorageId: "674e76b20013b1d3dcb4",
+  postsCollectionID:"675713f90017735500fb",
   storageId: '674c2d26001b524033e3'
 }
 
@@ -31,6 +35,9 @@ const {
   questionsCollectionId,
   videoCollectionoid,
   quizResponseCollectionId,
+  settingsCollectionId,
+  downloadsCollectionId,
+  postsCollectionID,
   storageId,
 } = config;
 
@@ -54,9 +61,9 @@ export const createUser = async (email, password, username) => {
   try {
     const newAccount = await account.create(
       ID.unique(),
-      email="muhammedafsalch7@gmail.com",
-      password="Password@2024",
-      username="afsu.me"
+      email = "muhammedafsalch7@gmail.com",
+      password = "Password@2024",
+      username = "afsu.me"
     )
 
     if (!newAccount) throw Error;
@@ -126,13 +133,13 @@ export const getAllPosts = async () => {
   try {
     const posts = await databases.listDocuments(
       databaseId,
-      videoCollectionoid,
+      postsCollectionID,
       [Query.orderDesc('$createdAt')]
     )
 
     return posts.documents
   } catch (error) {
-    throw new Error(error)
+    console.log(error);
   }
 }
 
@@ -151,18 +158,20 @@ export const getLatestPosts = async () => {
 }
 
 export const searchPosts = async (query) => {
+  console.log(query,"qqq");
   try {
     const posts = await databases.listDocuments(
       databaseId,
       videoCollectionoid,
-      [Query.search('title', query)]
-    )
+      [Query.search('title', query)] // Perform search on 'title'
+    );
 
-    return posts.documents
+    return posts.documents;
   } catch (error) {
-    throw new Error(error)
+    console.error('Error searching posts:', error);
+    throw new Error(error.message);
   }
-}
+};
 
 export const getUserPosts = async (userId) => {
   try {
@@ -217,24 +226,25 @@ export const uploadFile = async (file, type) => {
     name: file.fileName,
     type: file.mimeType,
     size: file.fileSize,
-    uri: file.uri
-  };
+    uri: file.uri,
+  }
 
   try {
-    const uploadedFile = await storage.updateFile(
+    const uploadedFile = await storage.createFile(
       storageId,
       ID.unique(),
       asset
     );
 
     const fileUrl = await getFilePreview(uploadedFile.$id, type)
-    return fileUrl
 
+    return fileUrl;
   } catch (error) {
-    throw new Error(error)
+    console.error("Error uploading file:", error);
+    throw new Error(error.message || "File upload failed.");
   }
+};
 
-}
 
 
 export const createVideo = async (form) => {
@@ -260,7 +270,6 @@ export const createVideo = async (form) => {
     throw new Error(error)
   }
 }
-
 
 
 
@@ -907,7 +916,7 @@ export const addProgram = async () => {
   //   { "districtid": 16, "name": "NILAGIRI", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null }
   // ]
 
- const districts= [
+  const districts = [
     { districtid: 1, name: "ALAPPUZHA" },
     { districtid: 2, name: "ERNAKULAM" },
     { districtid: 3, name: "IDUKKI" },
@@ -925,7 +934,7 @@ export const addProgram = async () => {
     { districtid: 15, name: "WAYANAD" },
     { districtid: 16, name: "NILAGIRI" }
   ]
-  
+
 
 
 
@@ -974,7 +983,6 @@ export const getItemByItemcode = async (itemcode) => {
     }
 
   } catch (error) {
-    throw new Error(error)
     console.log(error);
   }
 }
@@ -1028,7 +1036,7 @@ export const addNewResult = async (form) => {
       secondmark,
       thirdmark, } = form
 
-    // const { category_code } = await getItemByItemcode(itemcode);
+      // const { category_code } = await getItemByItemcode(itemcode);
 
     // const districts = {
     //   "G.K": "GK",
@@ -1050,7 +1058,8 @@ export const addNewResult = async (form) => {
 
     // const { getThirddristrictScore } = await getDistrictScores(thirddistrict);
 
-    const categorycode = await getItemByItemcode(Number(itemcode)).then(res => {
+
+    const categorycode = await getItemByItemcode(itemcode).then(res => {
       return res.category_code;
     }).catch(error => {
       console.error("Error fetching item:", error);
@@ -1058,7 +1067,6 @@ export const addNewResult = async (form) => {
 
     const [Image] = await Promise.all([
       uploadFile(resultimage, 'image'),
-
     ]);
 
     const newResult = await databases.createDocument(
@@ -1067,17 +1075,17 @@ export const addNewResult = async (form) => {
       ID.unique(),
       {
         resultcode: 1,
-        itemcode: Number(itemcode),
-        categorycode:categorycode,
-        resultimage: 'https://i.pinimg.com/originals/5c/85/3a/5c853aa5aa92b62949ed2a5afffbf6ce.png',
+        itemcode,
+        categorycode: categorycode,
+        resultimage: Image,
         firstgrade: firstGrade,
         secondgrade: secondGrade,
         thirdgrade: thirdGrade,
         adminId,
         publish,
-        firstdistrict: firstDistrict,
-        seconddistrict: secondDistrict,
-        thirddistrict: thirdDistrict,
+        firstdistrict: Number(firstDistrict),
+        seconddistrict: Number(secondDistrict),
+        thirddistrict: Number(thirdDistrict),
         firstmark,
         secondmark,
         thirdmark,
@@ -1088,7 +1096,6 @@ export const addNewResult = async (form) => {
   } catch (error) {
     console.log(error);
     throw new Error(error);
-
   }
 }
 
@@ -1119,7 +1126,6 @@ export const getLatestThreePosts = async () => {
     return posts.documents // Return the documents
   } catch (error) {
     console.error(error)
-    throw new Error('Failed to fetch latest posts')
   }
 }
 
@@ -1228,3 +1234,149 @@ export const getFilesFromBucket = async () => {
 };
 
 
+export const getResultByItemcode = async (itemcode) => {
+  try {
+
+    const result = await databases.listDocuments(
+      databaseId,
+      resultsCollectionId,
+      [Query.equal('itemcode', Number(itemcode))]
+    )
+    if (!result.documents[0]) {
+      return false
+    } else {
+      return result.documents[0]
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+export const updateResult = async (form) => {
+  try {
+    const {
+      resultid,
+      itemcode,
+      resultimage,
+      firstGrade,
+      secondGrade,
+      thirdGrade,
+      adminId,
+      publish,
+      firstDistrict,
+      secondDistrict,
+      thirdDistrict,
+      firstmark,
+      secondmark,
+      thirdmark,
+    } = form;
+
+    // Fetch the category code for the item
+    const categorycode = await getItemByItemcode(itemcode).then((res) => {
+      return res.category_code;
+    }).catch((error) => {
+      console.error("Error fetching item:", error);
+    });
+
+    // Upload new result image if provided
+    let Image = null;
+    if (resultimage) {
+      Image = await uploadFile(resultimage, 'image');
+    }
+
+    // Prepare the updated document fields
+    const updatedResult = {
+      itemcode,
+      categorycode,
+      resultimage: Image || null, // Only update the image if provided
+      firstgrade: firstGrade,
+      secondgrade: secondGrade,
+      thirdgrade: thirdGrade,
+      adminId,
+      publish,
+      firstdistrict: Number(firstDistrict),
+      seconddistrict: Number(secondDistrict),
+      thirddistrict: Number(thirdDistrict),
+      firstmark,
+      secondmark,
+      thirdmark,
+    };
+
+    // Remove any `null` values to avoid overwriting with empty fields
+    Object.keys(updatedResult).forEach((key) => {
+      if (updatedResult[key] === null || updatedResult[key] === undefined) {
+        delete updatedResult[key];
+      }
+    });
+
+    // Update the document in the database
+    const result = await databases.updateDocument(
+      databaseId,
+      resultsCollectionId,
+      resultid, // ID of the result document to update
+      updatedResult
+    );
+
+    return result;
+  } catch (error) {
+    console.error("Error updating result:", error);
+    throw new Error(error);
+  }
+};
+
+export const getSettings = async (item) => {
+  try {
+    const status = await databases.listDocuments(
+      databaseId,
+      settingsCollectionId,
+      [Query.equal("name", item)]
+    )
+
+    if (!status.documents[0]) {
+      return false
+    } else {
+      return status.documents[0]
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+
+
+export const getAllDownloadFiles = async () => {
+  try {
+    const posts = await databases.listDocuments(
+      databaseId,
+      downloadsCollectionId,
+      [Query.orderDesc('$createdAt')]
+    )
+
+    return posts.documents
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+
+export const createPost = async (form) => {
+  try {
+    const [thumbnailUrl] = await Promise.all([
+      uploadFile(form.thumbnail, 'image'),
+    ]);
+
+    const newPost = await databases.createDocument(
+      databaseId, postsCollectionID, ID.unique(),
+      {
+        thumbnail: thumbnailUrl,
+        caption: form.caption,
+      }
+    )
+    return newPost
+  } catch (error) {
+    throw new Error(error)
+  }
+}

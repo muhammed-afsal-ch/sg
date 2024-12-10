@@ -9,10 +9,11 @@ import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import useAppwrite from "@/lib/useAppwrite";
-import { checkParticipantExists, getAllQuestions, getCurrentUser, saveQuizResponse, signOut } from "@/lib/appwrite";
+import { checkParticipantExists, getAllQuestions, getCurrentUser, saveQuizResponse, signOut, getSettings } from "@/lib/appwrite";
 import QuestionComponent from "@/components/QuestionComponent";
 import { debounce } from 'lodash';
 import { getAllItems } from '../../utils/AsyncStorage'
+import { router } from "expo-router";
 
 
 // https://github.com/nysamnang/react-native-raw-bottom-sheet/blob/master/example/App.js
@@ -24,9 +25,7 @@ const Quiz = () => {
   // hooks
   const [latestQuestions, setLatestQuestions] = useState([])
 
-  // const { data: questions } = useAppwrite(() => getAllQuestions());
-
-
+  const { data: quizstatus } = useAppwrite(() => getSettings("quizstatus"));
   const sheetRef = useRef(null);
 
   const [clicked, setClicked] = useState(false)
@@ -277,7 +276,7 @@ const Quiz = () => {
           AsyncStorage.removeItem('place');
 
           await AsyncStorage.setItem('buttonClicked', 'true');
-          
+
           setForm({ ...form, name: "", mobile: "", place: "" })
 
           setOnceCompleted(!onceCompleted)
@@ -568,10 +567,16 @@ const Quiz = () => {
                   </Text>
                 </View>
 
+
                 <TouchableOpacity
                   onPress={() => {
-                    setClicked(!clicked)
-                    checkRegistration();
+                    if (quizstatus.value === "on") {
+                      setClicked(!clicked)
+                      checkRegistration();
+                    } else {
+                      Alert.alert("Message","Quiz time is over.")
+                      router.push("/home")
+                    }
                   }}
                 >
                   <View className="bg-secondary px-4 py-3 mt-2 mt-10 rounded-[35px]">

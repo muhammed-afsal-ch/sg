@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { ResizeMode, Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av"; // Importing Video from expo-av
 import * as Animatable from "react-native-animatable";
 import {
   FlatList,
   Image,
   ImageBackground,
   TouchableOpacity,
+  Text
 } from "react-native";
 
 import { icons } from "../constants";
+import Vid from "./Vid";
 
+// Zoom animations for the trending items
 const zoomIn = {
   0: {
     scale: 0.9,
@@ -28,33 +31,83 @@ const zoomOut = {
   },
 };
 
+// Component for each individual trending item
 const TrendingItem = ({ activeItem, item }) => {
   const [play, setPlay] = useState(false);
+  const [videoStatus, setVideoStatus] = useState(null);
+
+  const handlePlayToggle = () => {
+    setPlay((prevState) => !prevState);
+  };
+
+  const handlePause = () => {
+    setPlay(false);  // Set play state to false when paused
+  };
+
+  const handleError = (error) => {
+    console.error("Video error: ", error);
+  };
 
   return (
     <Animatable.View
       className="mr-5"
-      animation={activeItem === item.$id ? zoomIn : zoomOut} //.$id
+      animation={activeItem === item.$id ? zoomIn : zoomOut}
       duration={500}
     >
       {play ? (
-        <Video
-          source={{ uri: item.video }}
-          className="w-52 h-72 rounded-[33px] mt-3 bg-white/10"
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
-              setPlay(false);
-            }
-          }}
-        />
+        <>
+          {/* <Video
+            source={{ uri: item.video }} // Ensure this URI is correct
+            style={{
+              width: 208,
+              height: 288,
+              borderRadius: 33,
+              backgroundColor: "black", // Ensure video background is black while loading
+            }}
+            resizeMode={ResizeMode.CONTAIN}
+            useNativeControls
+            shouldPlay={play}
+            onPlaybackStatusUpdate={(status) => {
+              setVideoStatus(status);
+              if (status.didJustFinish) {
+                setPlay(false); // Automatically stop when finished
+              }
+              if (status.isPlaying === false) {
+                handlePause(); // Handle pausing and show thumbnail
+              }
+            }}
+            onError={handleError} // Handle errors if video doesn't load
+          /> */}
+
+          <Video
+            //className="w-52 h-72 rounded-[33px] mt-3 bg-white/10"
+            source={{ uri: item.video }}
+           style={{
+              width: 208,
+              height: 288,
+              borderRadius: 33,
+              backgroundColor: "black", // Ensure video background is black while loading
+            }}
+            resizeMode={ResizeMode.CONTAIN}
+            useNativeControls
+            shouldPlay={play}
+            onPlaybackStatusUpdate={(status) => {
+              setVideoStatus(status);
+              if (status.didJustFinish) {
+                setPlay(false);
+              }
+              if (status.isPlaying === false) {
+                handlePause(); // Handle pausing and show thumbnail
+              }
+              onError={handleError}
+            }}
+          />
+        </>
       ) : (
         <TouchableOpacity
           className="relative flex justify-center items-center"
           activeOpacity={0.7}
-          onPress={() => setPlay(true)}
+          onPress={handlePlayToggle}
         >
           <ImageBackground
             source={{
@@ -84,20 +137,27 @@ const Trending = ({ posts }) => {
     }
   };
 
+  const videoUrl = 'https://www.w3schools.com/html/mov_bbb.mp4';  // Example video URL
+
+
   return (
-    <FlatList
-      data={posts}
-      horizontal
-      keyExtractor={(item) => item.$id}
-      renderItem={({ item }) => (
-        <TrendingItem activeItem={activeItem} item={item} />
-      )}
-      onViewableItemsChanged={viewableItemsChanged}
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: 70,
-      }}
-      contentOffset={{ x: 170 }}
-    />
+    <>
+      <FlatList
+        data={posts}
+        horizontal
+        keyExtractor={(item) => item.$id}
+        renderItem={({ item }) => (
+          <TrendingItem activeItem={activeItem} item={item} />
+        )}
+        onViewableItemsChanged={viewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 70,
+        }}
+        contentOffset={{ x: 170 }}
+      />
+      <Vid videoUrl={videoUrl} />
+
+    </>
   );
 };
 

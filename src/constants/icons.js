@@ -21,10 +21,12 @@ import messageus from "../assets/icons/messageus.png"
 import zoom from "../assets/icons/zoom.png"
 import closex from "../assets/icons/closex.png"
 import share from "../assets/icons/share.png"
+import edit from "../assets/icons/edit.png"
 
 
 
 export default {
+  edit,
   share,
   closex,
   zoom,

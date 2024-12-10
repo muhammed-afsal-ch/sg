@@ -52,7 +52,7 @@ const SignIn = () => {
                     <Image
                         source={images.sargalayamlogo}
                         resizeMode="contain"
-                        className="w-[115px] h-[74px] -ml-5"
+                        className="w-[115px] h-[74px] -ml-5 rounded-lg"
                     />
 
                     <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
