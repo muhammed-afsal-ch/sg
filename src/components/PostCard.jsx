@@ -45,7 +45,7 @@ const PostCard = ({ caption, thumbnail }) => {
       console.warn("Thumbnail is undefined or empty.");
     }
   }, [thumbnail]);
-  
+
 
   const handleShare = async () => {
     setIsLoading(true);
@@ -140,15 +140,7 @@ const PostCard = ({ caption, thumbnail }) => {
     <View className="flex flex-col items-center px-4 mb-14">
       <View className="flex flex-row gap-3 items-start justify-center ">
         <View className="flex justify-center items-center flex-row flex-1">
-          {/* <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
-            <View className="bg-white w-[39px] h-[39px] rounded-lg flex justify-center items-center">
-            <Image
-                  source={images.sargalayamlogo}
-                  className="w-10 h-10 rounded-full"
-                  resizeMode="contain"
-                />
-            </View>
-          </View> */}
+
 
           <Image
             source={sargalayamlogo}
@@ -174,14 +166,14 @@ const PostCard = ({ caption, thumbnail }) => {
         <View className="mr-4 flex flex-row gap-2">
           <TouchableOpacity onPress={download}>
             <View className="p-3 rounded-full ">
-            <Image source={icons.download} className="w-5 h-5" resizeMode="contain" />
+              <Image source={icons.download} className="w-5 h-5" resizeMode="contain" />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleShare}>
-          <View className="p-3 rounded-full">
-            <Image source={icons.share} className="w-5 h-5" resizeMode="contain" />
-          </View>
+            <View className="p-3 rounded-full">
+              <Image source={icons.share} className="w-5 h-5" resizeMode="contain" />
+            </View>
           </TouchableOpacity>
 
 
@@ -205,115 +197,98 @@ const PostCard = ({ caption, thumbnail }) => {
         </View>
       )}
 
-      {/* <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={handleImageClick} // Open modal on image click
-        className="w-full mt-3 relative flex justify-center items-center"
-      >
-        <Image
-          source={{ uri: thumbnail }}
-          className="w-full h-[100%] rounded-xl mt-3"
-          style={{ height: 300 }} // Set a default height for the image
-          resizeMode="cover"
-        /> */}
-     <View
-  style={{
-    width: "100%", // Full width of the container
-    aspectRatio: aspectRatio,
-    borderRadius: 12,
-    overflow: "hidden", // Ensure the ImageViewer respects the container's bounds
-    position: "relative", // Allow absolute positioning of arrows
-  }}
-  className="mt-3"
->
-  <ImageViewer
-    imageUrls={images}
-    style={{ flex: 1 }} // Let it fill the container
-    enableImageZoom={false}
-    onChange={(index) => setCurrentImageIndex(index)} // Update current image index
-    saveToLocalByLongPress={false}
-    index={currentImageIndex} // Make sure the index is passed to ImageViewer
-    enablePreload={true}
-    pageAnimateTime={()=>100/2}
-  />
 
-  {/* Left Arrow */}
-  {images.length > 1 && currentImageIndex > 0 && (
-    <TouchableOpacity
-      onPress={() => {
-        // Decrease index to show the previous image
-        setCurrentImageIndex((prev) => Math.max(prev - 1, 0));
-      }}
-      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-400 p-2 rounded-full opacity-60"
-    >
-      <Image
-        source={icons.leftArrow}
-        className="w-6 h-6 opacity-100"
-        resizeMode="contain"
-        tintColor={"black"}
-      />
-    </TouchableOpacity>
-  )}
-
-  {/* Right Arrow */}
-  {images.length > 1 && currentImageIndex < images.length - 1 && (
-    <TouchableOpacity
-      onPress={() => {
-        // Increase index to show the next image
-        setCurrentImageIndex((prev) => Math.min(prev + 1, images.length - 1));
-      }}
-      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-400 p-2 rounded-full opacity-60"
-    >
-      <Image
-        source={icons.rightArrow}
-        className="w-6 h-6 opacity-100"
-        resizeMode="contain"
-        tintColor={"black"}
-      />
-    </TouchableOpacity>
-  )}
-
-  <TouchableOpacity
-    className="absolute right-4 bottom-4 bg-gray-400 p-2 rounded-full opacity-40"
-    onPress={handleImageClick}
-  >
-    <Image
-      source={icons.zoom}
-      className="w-6 h-6 opacity-100"
-      resizeMode="contain"
-      tintColor={"black"}
-    />
-  </TouchableOpacity>
-</View>
-
-
-      {/* <TouchableOpacity className="absolute right-4 bottom-4">
-          <Image source={icons.zoom} className="w-6 h-6" resizeMode="contain" />
-        </TouchableOpacity>
-     </TouchableOpacity> */}
-
-<View className="flex flex-start w-full mt-3">
-      <Text
-        className={`text-base text-white font-alight ${
-          !expanded ? 'line-clamp-2' : ''
-        }`}
+      <View
         style={{
-          overflow: 'hidden',
-          display: '-webkit-box',
-          WebkitLineClamp: !expanded ? 2 : 'none',
-          WebkitBoxOrient: 'vertical',
+          width: "100%", // Full width of the container
+          aspectRatio: aspectRatio,
+          borderRadius: 12,
+          overflow: "hidden", // Ensure the ImageViewer respects the container's bounds
+          position: "relative", // Allow absolute positioning of arrows
         }}
+        className="mt-3"
       >
-        {caption}
-      </Text>
-      {caption.length > 100 && ( // Adjust this condition based on the length you want
-        <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-          <Text className="text-blue-500 mt-1">
-            {expanded ? 'Read Less' : 'Read More'}
-          </Text>
+        <ImageViewer
+          imageUrls={images}
+          style={{ flex: 1 }} // Let it fill the container
+          enableImageZoom={false}
+          onChange={(index) => setCurrentImageIndex(index)} // Update current image index
+          saveToLocalByLongPress={false}
+          index={currentImageIndex} // Make sure the index is passed to ImageViewer
+          enablePreload={true}
+          pageAnimateTime={() => 100 / 2}
+        />
+
+        {/* Left Arrow */}
+        {images.length > 1 && currentImageIndex > 0 && (
+          <TouchableOpacity
+            onPress={() => {
+              // Decrease index to show the previous image
+              setCurrentImageIndex((prev) => Math.max(prev - 1, 0));
+            }}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-400 p-2 rounded-full opacity-60"
+          >
+            <Image
+              source={icons.leftArrow}
+              className="w-6 h-6 opacity-100"
+              resizeMode="contain"
+              tintColor={"black"}
+            />
+          </TouchableOpacity>
+        )}
+
+        {/* Right Arrow */}
+        {images.length > 1 && currentImageIndex < images.length - 1 && (
+          <TouchableOpacity
+            onPress={() => {
+              // Increase index to show the next image
+              setCurrentImageIndex((prev) => Math.min(prev + 1, images.length - 1));
+            }}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-400 p-2 rounded-full opacity-60"
+          >
+            <Image
+              source={icons.rightArrow}
+              className="w-6 h-6 opacity-100"
+              resizeMode="contain"
+              tintColor={"black"}
+            />
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          className="absolute right-4 bottom-4 bg-gray-400 p-2 rounded-full opacity-40"
+          onPress={handleImageClick}
+        >
+          <Image
+            source={icons.zoom}
+            className="w-6 h-6 opacity-100"
+            resizeMode="contain"
+            tintColor={"black"}
+          />
         </TouchableOpacity>
-      )}
-    </View>
+      </View>
+
+      <View className="flex flex-start w-full mt-3">
+        <Text
+          className={`text-base text-white font-alight ${!expanded ? 'line-clamp-2' : ''
+            }`}
+          style={{
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitLineClamp: !expanded ? 2 : 'none',
+            WebkitBoxOrient: 'vertical',
+          }}
+        >
+          {caption}
+        </Text>
+        {caption.length > 100 && ( // Adjust this condition based on the length you want
+          <TouchableOpacity onPress={() => setExpanded(!expanded)}>
+            <Text className="text-blue-500 mt-1">
+              {expanded ? 'Read Less' : 'Read More'}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
 
       {/* Modal for ImageViewer */}
       <Modal

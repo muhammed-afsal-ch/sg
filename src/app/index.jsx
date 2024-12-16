@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { images } from "../constants";
 import { CustomButton } from "../components";
 import Animation from "@/components/Animation"; // Your animation component
-import { getAllItems } from "@/utils/AsyncStorage";
 
 const Welcome = () => {
   const [isFirstTime, setIsFirstTime] = useState(false); // Track first-time user

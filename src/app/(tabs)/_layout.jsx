@@ -61,7 +61,7 @@ const TabLayout = () => {
         <Tabs.Screen
           name="scoreboard"
           options={{
-            title: "Score Board",
+            title: "Leaderboard",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon

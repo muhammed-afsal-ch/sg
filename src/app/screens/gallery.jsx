@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { FlatList, View, TouchableOpacity, Image,ActivityIndicator,StyleSheet, Modal, Text, RefreshControl } from 'react-native';
+import { FlatList, View, TouchableOpacity, Image, ActivityIndicator, StyleSheet, Modal, Text, RefreshControl } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
-import { getFilesFromBucket } from '@/lib/appwrite'; 
+import { getFilesFromBucket } from '@/lib/appwrite';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Cache storage
 import { router } from 'expo-router';
 import ImageViewer from 'react-native-image-zoom-viewer'; // Import ImageViewer
 import { icons } from '@/constants';
 import * as FileSystem from 'expo-file-system';
-import { shareAsync } from 'expo-sharing'; 
+import { shareAsync } from 'expo-sharing';
 import { FloatingAction } from 'react-native-floating-action';
 import { useGlobalContext } from "../../context/Globalprovider";
 
@@ -64,7 +64,7 @@ const GalleryScreen = () => {
   // Render item for FlatList
   const renderItem = ({ item }) => {
     const fileUrl = item.$download; // File URL
-  
+
     // Check if the mimeType is an image or video and render accordingly
     if (item.mimeType.startsWith('image')) {
       return (
@@ -85,10 +85,10 @@ const GalleryScreen = () => {
         </TouchableOpacity>
       );
     }
-  
+
     return null; // Return nothing if the item isn't an image or video
   };
-  
+
 
   const closeModal = () => {
     setIsModalVisible(false); // Close the modal
@@ -103,42 +103,42 @@ const GalleryScreen = () => {
       Alert.alert('Error', 'No valid file to share.');
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     try {
       // Use a temporary cache directory for the downloaded file
       const fileExtension = selectedFile.mimeType.startsWith('video') ? 'mp4' : 'jpg'; // Set extension based on type
       const fileUri = FileSystem.cacheDirectory + `sargalayam_${new Date().getTime()}.${fileExtension}`;
-  
+
       // Download the file
       const downloadResult = await FileSystem.downloadAsync(selectedFile.fileUrl, fileUri);
-  
+
       // Ensure the file downloaded successfully
       if (downloadResult.status !== 200) {
         throw new Error('Failed to download the file.');
       }
-  
+
       // Share the downloaded file
       await shareAsync(downloadResult.uri, {
         message: selectedFile.mimeType.startsWith('video')
-          ? 'Check out this video!'
-          : 'Check out this image!', // Optional caption based on type
+          ? 'Check out this video @Sargalayam App!'
+          : 'Check out this image! @Sargalayam App', // Optional caption based on type
       });
-  
+
       setIsLoading(false);
     } catch (error) {
       console.error('Error in handleShare:', error);
-  
+
       // Show a user-friendly alert
       Alert.alert('Error', 'Failed to share the file. Please try again.');
-  
+
       // Ensure to stop the loader
       setIsLoading(false);
     }
   };
-  
-  
+
+
 
   return (
     <View style={styles.container} className='bg-black-100'>
@@ -166,88 +166,88 @@ const GalleryScreen = () => {
         {selectedFile?.mimeType === 'image' ? (
           <>
 
-{isLoading && (
-  <View
-    style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000,
-    }}
-  >
-    <ActivityIndicator size="large" color="#3178f4" />
-  </View>
-)}
-          
-          <ImageViewer
-            imageUrls={images}
-            saveToLocalByLongPress={false}
-            enableSwipeDown={true}
-            onSwipeDown={closeModal}
-            renderFooter={() => null}
-            renderHeader={() => (
-              <>
-              <TouchableOpacity onPress={handleShare}
-               style={{
-                position: 'absolute',
-                top: 30,
-                right: 50,
-                backgroundColor: 'transparent',
-                //borderWidth: 1,
-                borderColor: 'gray',
-                borderRadius: 50,
-                padding: 10,
-                zIndex: 2,
-              }}
-              >
-          <View className="p-3 rounded-full">
-            <Image source={icons.share} style={{ width: 20, height: 20 }}  resizeMode="contain" />
-          </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-                onPress={closeModal}
+            {isLoading && (
+              <View
                 style={{
                   position: 'absolute',
-                  top: 40,
-                  right: 20,
-                  backgroundColor: 'transparent',
-                  //borderWidth: 1,
-                  borderColor: 'gray',
-                  borderRadius: 50,
-                  padding: 10,
-                  zIndex: 2,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 1000,
                 }}
               >
-                <Image source={icons.closex} style={{ width: 20, height: 20 }} resizeMode="contain" />
-              </TouchableOpacity>
-              </>
-              
+                <ActivityIndicator size="large" color="#3178f4" />
+              </View>
             )}
-          />
-</>
+
+            <ImageViewer
+              imageUrls={images}
+              saveToLocalByLongPress={false}
+              enableSwipeDown={true}
+              onSwipeDown={closeModal}
+              renderFooter={() => null}
+              renderHeader={() => (
+                <>
+                  <TouchableOpacity onPress={handleShare}
+                    style={{
+                      position: 'absolute',
+                      top: 30,
+                      right: 50,
+                      backgroundColor: 'transparent',
+                      //borderWidth: 1,
+                      borderColor: 'gray',
+                      borderRadius: 50,
+                      padding: 10,
+                      zIndex: 2,
+                    }}
+                  >
+                    <View className="p-3 rounded-full">
+                      <Image source={icons.share} style={{ width: 20, height: 20 }} resizeMode="contain" />
+                    </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={closeModal}
+                    style={{
+                      position: 'absolute',
+                      top: 40,
+                      right: 20,
+                      backgroundColor: 'transparent',
+                      //borderWidth: 1,
+                      borderColor: 'gray',
+                      borderRadius: 50,
+                      padding: 10,
+                      zIndex: 2,
+                    }}
+                  >
+                    <Image source={icons.closex} style={{ width: 20, height: 20 }} resizeMode="contain" />
+                  </TouchableOpacity>
+                </>
+
+              )}
+            />
+          </>
         ) : selectedFile?.mimeType === 'video' ? (
           <View style={styles.modalContainer}>
             {isLoading && (
-  <View
-    style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000,
-    }}
-  >
-    <ActivityIndicator size="large" color="#3178f4" />
-  </View>
-)}
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 1000,
+                }}
+              >
+                <ActivityIndicator size="large" color="#3178f4" />
+              </View>
+            )}
             <Video
               source={{ uri: selectedFile.fileUrl }}
               rate={1.0}
@@ -260,26 +260,26 @@ const GalleryScreen = () => {
               style={{
                 width: "100%",
                 height: "100%",
-                backgroundColor:"black"
+                backgroundColor: "black"
               }}
             />
-            
-  <TouchableOpacity
-    onPress={handleShare}
-    style={{
-      position: 'absolute',
-      top: 30,
-      right: 55,
-      backgroundColor: 'transparent',
-      borderRadius: 50,
-      padding: 10,
-      zIndex: 2,
-    }}
-  >
-    <View className="p-3 rounded-full">
-      <Image source={icons.share} style={{ width: 20, height: 20 }} resizeMode="contain" />
-    </View>
-  </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleShare}
+              style={{
+                position: 'absolute',
+                top: 30,
+                right: 55,
+                backgroundColor: 'transparent',
+                borderRadius: 50,
+                padding: 10,
+                zIndex: 2,
+              }}
+            >
+              <View className="p-3 rounded-full">
+                <Image source={icons.share} style={{ width: 20, height: 20 }} resizeMode="contain" />
+              </View>
+            </TouchableOpacity>
 
 
             <TouchableOpacity
@@ -294,21 +294,21 @@ const GalleryScreen = () => {
         )}
       </Modal>
       {user && (
-          <FloatingAction
-            showBackground={false}
-            color="#FF8E01"
-            floatingIcon={<Text className="text-4xl text-white font-plight text-center mt-2">+</Text>}
-            onPressMain={() => {
-              router.push("admin/addtogallery");
-            }}
-            style={{
-              position: 'absolute',
-              bottom: 30,
-              right: 20,
-              zIndex: 999,
-            }}
-          />
-        )}
+        <FloatingAction
+          showBackground={false}
+          color="#FF8E01"
+          floatingIcon={<Text className="text-4xl text-white font-plight text-center mt-2">+</Text>}
+          onPressMain={() => {
+            router.push("admin/addtogallery");
+          }}
+          style={{
+            position: 'absolute',
+            bottom: 30,
+            right: 20,
+            zIndex: 999,
+          }}
+        />
+      )}
     </View>
   );
 };

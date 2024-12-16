@@ -2,27 +2,27 @@ import { useState, useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, RefreshControl, Text, TouchableOpacity, Image, View, Linking, BackHandler } from "react-native";
 import { icons, images } from "../../constants";
-import { getAllPosts, getLatestThreePosts, getItemByItemcode, getLatestPosts } from "../../lib/appwrite";
+import {  getLatestPosts, getAllResultsAndPostsGrouped } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/Globalprovider";
 import PostCard from "@/components/PostCard";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FloatingAction } from "react-native-floating-action";
-import { EmptyState, SearchInput, Trending } from "../../components";
+import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
 import Bubble from "@/components/Bubble";
 import useAppwrite from "@/lib/useAppwrite";
 
 const Home = () => {
   const { user } = useGlobalContext();
-  const { data: latestAllResults } = useAppwrite(getLatestThreePosts);
+  const { data: postsAndResults } = useAppwrite(getAllResultsAndPostsGrouped);
+
+
   const [posts, setPosts] = useState([]);  // Track posts
   const [hilights, setHilights] = useState([]);  // For highlights
   const [page, setPage] = useState(1);  // Page for pagination
   const [loading, setLoading] = useState(false);  // To track if posts are being fetched
   const [refreshing, setRefreshing] = useState(false);  // For pull-to-refresh
-  const [fullResults, setFullResults] = useState([]);
   const [isClicked, setIsClicked] = useState(false);
-
 
   useEffect(() => {
     const checkIfClicked = async () => {
@@ -55,7 +55,7 @@ const Home = () => {
   const fetchPosts = async (pageNum = 1) => {
     setLoading(true);
     try {
-      const data = await getAllPosts(pageNum, 10); // Fetch 10 posts for the given page
+      const data = await getAllResultsAndPostsGrouped(pageNum, 10); // Fetch 10 posts for the given page
       if (pageNum === 1) {
         setPosts(data); // Set initial data when page is 1
       } else {
@@ -90,31 +90,28 @@ const Home = () => {
     getHilights();  // Get highlights data
   }, []);
 
-  useEffect(() => {
-    const fetchAdditionalData = async () => {
-      if (!latestAllResults) return;
-
-      const updatedResults = await Promise.all(
-        latestAllResults.map(async (item) => {
-          try {
-            const { itemlabel, category_code } = await getItemByItemcode(item.itemcode);
-            return {
-              ...item,
-              itemlabel,
-              category_code,
-            };
-          } catch (error) {
-            console.error(`Error fetching details for item_code ${item.itemcode}:`, error);
-            return item;
-          }
-        })
+  const renderItem = ({ item }) => {
+    if (item.type === 'result') {
+      return (
+        <VideoCard
+          item_code={item.itemcode}
+          item_name={item.itemlabel}
+          thumbnail={item.resultimage}
+          category={item.category_code}
+        />
       );
+    } else if (item.type === 'post') {
+      return (
+        <PostCard
+          caption={item.caption}
+          thumbnail={item.thumbnail}
+        />
+      );
+    }
 
-      setFullResults(updatedResults);
-    };
-
-    fetchAdditionalData();
-  }, [latestAllResults]);
+    // Return null or a default view if no type matches
+    return null;
+  };
 
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   const timerRef = useRef(null);
@@ -142,9 +139,9 @@ const Home = () => {
   return (
     <SafeAreaView className="bg-primary">
       <FlatList
-        data={posts}
-        keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => <PostCard caption={item.caption} thumbnail={item.thumbnail} />}
+         data={postsAndResults}  // Data containing both posts and results
+         keyExtractor={(item) => item.$id}  // Ensure each item has a unique key
+         renderItem={renderItem}  // Use the conditional renderItem function
         ListHeaderComponent={() => (
           <View className="flex my-6 px-4 space-y-6">
             <View className="flex justify-between items-start flex-row mb-6">
@@ -207,7 +204,6 @@ const Home = () => {
             { text: "Hilights Video", icon: icons.plus, name: "createvideo", position: 4 },
           ]}
           onPressItem={(name) => {
-            console.log(`selected button: ${name}`);
             router.push(`/admin/${name}`);
           }}
           style={{ position: 'absolute', bottom: 30, right: 20, zIndex: 999 }}

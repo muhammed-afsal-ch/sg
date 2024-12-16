@@ -31,14 +31,14 @@ export default function App() {
       {/* Animated image with zooming effect */}
       <Animated.View style={[styles.imageContainer, { transform: [{ scale }] }]}>
         <View className='border border-1 border-green-200 p-1 rounded-full 	'>
-        <View className='border border-2 border-green-200 rounded-full p-2 bg-green-400'>
-          <Image
-            source={images.motolg} // Replace with your image URL
-            style={[styles.image, { tintColor: '#232533' }]} 
-            className='w-[35px] h-[35px]'
-            resizeMode='contain'
-          />
-        </View>
+          <View className='border border-2 border-green-200 rounded-full p-2 bg-green-400'>
+            <Image
+              source={images.motolg} // Replace with your image URL
+              style={[styles.image, { tintColor: '#232533' }]}
+              className='w-[35px] h-[35px]'
+              resizeMode='contain'
+            />
+          </View>
         </View>
       </Animated.View>
     </View>

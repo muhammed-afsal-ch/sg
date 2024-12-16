@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { router } from "expo-router";
-import { Video,ResizeMode } from "expo-av";
+import { Video, ResizeMode } from "expo-av";
 import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -14,7 +14,7 @@ import {
 
 import { icons } from "@/constants";
 import { createVideo } from "@/lib/appwrite";
-import { CustomButton, FormField } from "@/components";
+import { CustomButton } from "@/components";
 import { useGlobalContext } from "../../context/Globalprovider";
 
 const Create = () => {
@@ -127,7 +127,7 @@ const Create = () => {
                 className="w-full h-64 rounded-2xl"
                 //useNativeControls
                 resizeMode={ResizeMode.COVER}
-                //isLooping
+              //isLooping
               />
             ) : (
               <View className="w-full h-40 px-4 bg-black-100 rounded-2xl border border-black-200 flex justify-center items-center">
@@ -172,7 +172,7 @@ const Create = () => {
           </TouchableOpacity>
         </View>
 
-  
+
         <CustomButton
           title="Submit & Publish"
           handlePress={submit}

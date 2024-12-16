@@ -17,8 +17,6 @@ import { router } from "expo-router";
 
 
 
-// https://github.com/nysamnang/react-native-raw-bottom-sheet/blob/master/example/App.js
-// https://www.freecodecamp.org/news/how-to-store-data-locally-in-react-native-expo/
 
 
 const Quiz = () => {
@@ -36,7 +34,7 @@ const Quiz = () => {
   const [onceCompleted, setOnceCompleted] = useState(false)
   const [submitStarted, setSubmitStarted] = useState(false)
 
-  
+
   const checkRegistration = async () => {
     const itemss = await getAllItems();
     console.log(itemss, "itemss");
@@ -170,14 +168,6 @@ const Quiz = () => {
   }
 
 
-  // Handle the selected option, e.g., check if it's correct, move to the next question, etc.
-
-  // if (index === "Q1,1" || index === "Q2,1" || index === "Q3,1" || index === "Q4,1" || index === "Q5,1" || index === "Q6,1" || index === "Q7,1" || index === "Q8,1" || index === "Q9,1" || index === "Q10,1") {
-  //   setForm({ ...form, q1: 1, q2: 1, q3: 1, q4: 1, q5: 1, q6: 1, q7: 1, q8: 1, q9: 1, q10: 1 })
-  // }else if
-  //  (index === "Q1,0" || index === "Q2,0" || index === "Q3,0" || index === "Q4,0" || index === "Q5,0" || index === "Q6,0" || index === "Q7,0" || index === "Q8,0" || index === "Q9,0" || index === "Q10,0") {
-  //   setForm({ ...form, q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0 })
-  // }
 
   const handleOptionSelect = async (data) => {
 
@@ -223,15 +213,10 @@ const Quiz = () => {
 
       if (finalTotal >= 0) {
         setForm({ ...form, total: finalTotal });
-        //this setForm is not work....
-        // console.log(form);
+
 
         try {
           await saveQuizResponse({ name: form.name, mobile: form.mobile, place: form.place, total: finalTotal });
-
-          // await AsyncStorage.setItem('name', "");
-          // await AsyncStorage.setItem('mobile', "");
-          // await AsyncStorage.setItem('place', "");
 
 
           Alert.alert("Congratulations! ", "You have successfully participated in the quiz.");
@@ -324,9 +309,6 @@ const Quiz = () => {
       {clicked === true && started === false ? (
         <GestureHandlerRootView style={styles.container}>
 
-          {/* <Button title="Snap To 90%" onPress={() => handleSnapPress(2)} />
-             <Button title="Snap To 50%" onPress={() => handleSnapPress(1)} />
-             <Button title="Snap To 25%" onPress={() => handleSnapPress(0)} /> */}
           <BottomSheet
             ref={sheetRef}
             snapPoints={snapPoints}
@@ -575,7 +557,7 @@ const Quiz = () => {
                       setClicked(!clicked)
                       checkRegistration();
                     } else {
-                      Alert.alert("Message","Quiz time is over.")
+                      Alert.alert("Message", "Quiz time is over.")
                       router.push("/home")
                     }
                   }}
@@ -605,17 +587,12 @@ const Quiz = () => {
 const styles = StyleSheet.create({
 
   container: {
-
     flex: 1,
-
     paddingTop: 200,
-
   },
 
   contentContainer: {
-
     flex: 1,
-
     padding: 36,
     alignItems: 'center',
 

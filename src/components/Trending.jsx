@@ -38,40 +38,40 @@ const TrendingItem = ({ activeItem, item }) => {
       Alert.alert("Error", "No valid file to share.");
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     try {
       // Use a temporary cache directory for the downloaded file
       const fileExtension = "mp4"; // Assuming video files are always mp4
       const fileUri = FileSystem.cacheDirectory + `trending_${new Date().getTime()}.${fileExtension}`;
-  
+
       // Download the video file
       const downloadResult = await FileSystem.downloadAsync(item.video, fileUri);
-  
+
       if (downloadResult.status !== 200) {
         throw new Error("Failed to download the file.");
       }
-  
+
       // Define your caption message
       const captionMessage = `Check out this video! 🌟\n\nRead more or visit our app: Sargalayam`;
-  
+
       // Share the downloaded video with the caption
       await shareAsync(downloadResult.uri, {
         message: captionMessage, // Caption text
       });
-      
-  
+
+
       setIsLoading(false);
     } catch (error) {
       console.error("Error in handleShare:", error);
-  
+
       // Show a user-friendly alert
       Alert.alert("Error", "Failed to share the file. Please try again.");
       setIsLoading(false);
     }
   };
-  
+
 
   return (
     <Animatable.View

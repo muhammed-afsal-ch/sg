@@ -1,6 +1,6 @@
 import { useGlobalContext } from "@/context/Globalprovider";
 import { Stack, router } from "expo-router";
-import { useContext, useEffect } from "react";
+import {  useEffect } from "react";
 import { BackHandler } from "react-native";
 
 import { View, ActivityIndicator } from "react-native";
@@ -54,24 +54,24 @@ export default function ResultAddLayout() {
       }} />
       <Stack.Screen name="createvideo" options={{
         headerStyle: {
-        backgroundColor: "#161622",
+          backgroundColor: "#161622",
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-        fontWeight: "bold",
+          fontWeight: "bold",
         },
         title: "Upload New Video",
-      }}/>
- <Stack.Screen name="createpost" options={{
+      }} />
+      <Stack.Screen name="createpost" options={{
         headerStyle: {
-        backgroundColor: "#161622",
+          backgroundColor: "#161622",
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-        fontWeight: "bold",
+          fontWeight: "bold",
         },
         title: "Create New Post",
-      }}/>
+      }} />
       <Stack.Screen name="[editresult]" options={{
         headerStyle: {
           backgroundColor: "#161622",
@@ -83,37 +83,19 @@ export default function ResultAddLayout() {
         title: "Edit Result",
       }} />
 
-<Stack.Screen name="addtogallery" options={{
+      <Stack.Screen name="addtogallery" options={{
         headerStyle: {
-        backgroundColor: "#161622",
+          backgroundColor: "#161622",
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-        fontWeight: "bold",
+          fontWeight: "bold",
         },
         title: "Add To Gallery",
-      }}/>
+      }} />
 
     </Stack>
 
   );
 }
 
-
-// import { Stack } from 'expo-router';
-
-// export default function ResultAddLayout() {
-//   return (
-//     <Stack
-//       screenOptions={{
-//         headerStyle: {
-//           backgroundColor: '#161622',
-//         },
-//         headerTintColor: '#fff',
-//         headerTitleStyle: {
-//           fontWeight: 'bold',
-//         }, title:"Add New Result"
-//       }}
-//     />
-//   );
-// }

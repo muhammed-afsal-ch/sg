@@ -219,8 +219,8 @@ const AddNewResult = () => {
         secondmark: totalSecondDistrictMarks,
         thirdmark: totalThirdDistrictMarks,
         adminId: user.$id,
-        gradesOnly:[`{ "A": [${selectedA}], "B": [${selectedB}], "C": [${selectedC}] }`]
-       // gradesOnly: [`{A:${selectedA},B:${selectedB},C:${selectedC}}`]
+        gradesOnly: [`{ "A": [${selectedA}], "B": [${selectedB}], "C": [${selectedC}] }`]
+        // gradesOnly: [`{A:${selectedA},B:${selectedB},C:${selectedC}}`]
       };
 
       const addResult = await addNewResult(resultObject);
@@ -376,91 +376,91 @@ const AddNewResult = () => {
           {renderDropdown('Third District', 'thirdDistrict', 'thirdGrade')}
           {/* <Button title="Reset All Dropdowns" onPress={handleButtonClick} /> */}
 
-<View className="w-[100%]">
-  <View style={{ padding: 16 }}>
-    <Text className="text-base text-gray-100 font-pmedium">A Grade only</Text>
-    <MultiSelect
-      style={styles.dropdownOnly}
-      placeholderStyle={styles.placeholderStyle}
-      selectedTextStyle={styles.selectedTextStyle}
-      search
-      data={transformedData}
-      labelField="label"
-      valueField="value"
-      placeholder="Select item"
-      searchPlaceholder="Search..."
-      value={selectedA}
-      onChange={item => {
-        setSelectedA(item);
-        // Remove selected items from B and C grade options
-        setSelectedB(selectedB.filter(i => !item.includes(i)));
-        setSelectedC(selectedC.filter(i => !item.includes(i)));
-      }}
-      mode='modal'
-      activeColor='lightgreen'
-      selectedStyle={{
-        borderRadius: 12,
-        backgroundColor: "white"
-      }}
-    />
-  </View>
+          <View className="w-[100%]">
+            <View style={{ padding: 16 }}>
+              <Text className="text-base text-gray-100 font-pmedium">A Grade only</Text>
+              <MultiSelect
+                style={styles.dropdownOnly}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                search
+                data={transformedData}
+                labelField="label"
+                valueField="value"
+                placeholder="Select item"
+                searchPlaceholder="Search..."
+                value={selectedA}
+                onChange={item => {
+                  setSelectedA(item);
+                  // Remove selected items from B and C grade options
+                  setSelectedB(selectedB.filter(i => !item.includes(i)));
+                  setSelectedC(selectedC.filter(i => !item.includes(i)));
+                }}
+                mode='modal'
+                activeColor='lightgreen'
+                selectedStyle={{
+                  borderRadius: 12,
+                  backgroundColor: "white"
+                }}
+              />
+            </View>
 
-  <View style={{ padding: 16 }}>
-    <Text className="text-base text-gray-100 font-pmedium">B Grade only</Text>
-    <MultiSelect
-      style={styles.dropdownOnly}
-      placeholderStyle={styles.placeholderStyle}
-      selectedTextStyle={styles.selectedTextStyle}
-      search
-      data={transformedData.filter(item => !selectedA.includes(item.value) && !selectedC.includes(item.value))}
-      labelField="label"
-      valueField="value"
-      placeholder="Select item"
-      searchPlaceholder="Search..."
-      value={selectedB}
-      onChange={item => {
-        setSelectedB(item);
-        // Remove selected items from A and C grade options
-        setSelectedA(selectedA.filter(i => !item.includes(i)));
-        setSelectedC(selectedC.filter(i => !item.includes(i)));
-      }}
-      mode='modal'
-      activeColor='lightgreen'
-      selectedStyle={{
-        borderRadius: 12,
-        backgroundColor: "white"
-      }}
-    />
-  </View>
+            <View style={{ padding: 16 }}>
+              <Text className="text-base text-gray-100 font-pmedium">B Grade only</Text>
+              <MultiSelect
+                style={styles.dropdownOnly}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                search
+                data={transformedData.filter(item => !selectedA.includes(item.value) && !selectedC.includes(item.value))}
+                labelField="label"
+                valueField="value"
+                placeholder="Select item"
+                searchPlaceholder="Search..."
+                value={selectedB}
+                onChange={item => {
+                  setSelectedB(item);
+                  // Remove selected items from A and C grade options
+                  setSelectedA(selectedA.filter(i => !item.includes(i)));
+                  setSelectedC(selectedC.filter(i => !item.includes(i)));
+                }}
+                mode='modal'
+                activeColor='lightgreen'
+                selectedStyle={{
+                  borderRadius: 12,
+                  backgroundColor: "white"
+                }}
+              />
+            </View>
 
-  <View style={{ padding: 16 }}>
-    <Text className="text-base text-gray-100 font-pmedium">C Grade only</Text>
-    <MultiSelect
-      style={styles.dropdownOnly}
-      placeholderStyle={styles.placeholderStyle}
-      selectedTextStyle={styles.selectedTextStyle}
-      search
-      data={transformedData.filter(item => !selectedA.includes(item.value) && !selectedB.includes(item.value))}
-      labelField="label"
-      valueField="value"
-      placeholder="Select item"
-      searchPlaceholder="Search..."
-      value={selectedC}
-      onChange={item => {
-        setSelectedC(item);
-        // Remove selected items from A and B grade options
-        setSelectedA(selectedA.filter(i => !item.includes(i)));
-        setSelectedB(selectedB.filter(i => !item.includes(i)));
-      }}
-      mode='modal'
-      activeColor='lightgreen'
-      selectedStyle={{
-        borderRadius: 12,
-        backgroundColor: "white"
-      }}
-    />
-  </View>
-</View>
+            <View style={{ padding: 16 }}>
+              <Text className="text-base text-gray-100 font-pmedium">C Grade only</Text>
+              <MultiSelect
+                style={styles.dropdownOnly}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                search
+                data={transformedData.filter(item => !selectedA.includes(item.value) && !selectedB.includes(item.value))}
+                labelField="label"
+                valueField="value"
+                placeholder="Select item"
+                searchPlaceholder="Search..."
+                value={selectedC}
+                onChange={item => {
+                  setSelectedC(item);
+                  // Remove selected items from A and B grade options
+                  setSelectedA(selectedA.filter(i => !item.includes(i)));
+                  setSelectedB(selectedB.filter(i => !item.includes(i)));
+                }}
+                mode='modal'
+                activeColor='lightgreen'
+                selectedStyle={{
+                  borderRadius: 12,
+                  backgroundColor: "white"
+                }}
+              />
+            </View>
+          </View>
 
           <View className="flex flex-row  w-full gap-1 justify-evenly  px-4 mt-4  mb-[20px]">
             <CustomButton
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
-  dropdownOnly:{
+  dropdownOnly: {
     height: 50,
     borderColor: 'gray',
     backgroundColor: "white",

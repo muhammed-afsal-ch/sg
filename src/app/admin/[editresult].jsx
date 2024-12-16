@@ -24,7 +24,7 @@ import { icons } from "@/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Dropdown,MultiSelect } from "react-native-element-dropdown";
+import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import { useGlobalContext } from "../../context/Globalprovider";
 
 const EditResult = () => {
@@ -34,94 +34,94 @@ const EditResult = () => {
   const [loading, setLoading] = useState(false);
 
   const [modalVisibleA, setModalVisibleA] = useState(false);
-const [modalVisibleB, setModalVisibleB] = useState(false);
-const [modalVisibleC, setModalVisibleC] = useState(false);
+  const [modalVisibleB, setModalVisibleB] = useState(false);
+  const [modalVisibleC, setModalVisibleC] = useState(false);
 
-const [selectedItemsA, setSelectedItemsA] = useState([]);
-const [selectedItemsB, setSelectedItemsB] = useState([]);
-const [selectedItemsC, setSelectedItemsC] = useState([]);
+  const [selectedItemsA, setSelectedItemsA] = useState([]);
+  const [selectedItemsB, setSelectedItemsB] = useState([]);
+  const [selectedItemsC, setSelectedItemsC] = useState([]);
 
-// Function to handle item selection for A
-const handleItemSelectA = (item) => {
-  const newSelectedItems = [...selectedItemsA];
-  const itemId = Number(item.id); // Ensure item.id is a number
+  // Function to handle item selection for A
+  const handleItemSelectA = (item) => {
+    const newSelectedItems = [...selectedItemsA];
+    const itemId = Number(item.id); // Ensure item.id is a number
 
-  const index = newSelectedItems.indexOf(itemId);
+    const index = newSelectedItems.indexOf(itemId);
 
-  if (index === -1) {
-    newSelectedItems.push(itemId); // Add the ID if not selected
-  } else {
-    newSelectedItems.splice(index, 1); // Remove the ID if already selected
-  }
+    if (index === -1) {
+      newSelectedItems.push(itemId); // Add the ID if not selected
+    } else {
+      newSelectedItems.splice(index, 1); // Remove the ID if already selected
+    }
 
-  setSelectedItemsA(newSelectedItems);
-};
+    setSelectedItemsA(newSelectedItems);
+  };
 
-// Function to handle item selection for B
-const handleItemSelectB = (item) => {
-  const newSelectedItems = [...selectedItemsB];
-  const itemId = Number(item.id);
+  // Function to handle item selection for B
+  const handleItemSelectB = (item) => {
+    const newSelectedItems = [...selectedItemsB];
+    const itemId = Number(item.id);
 
-  const index = newSelectedItems.indexOf(itemId);
+    const index = newSelectedItems.indexOf(itemId);
 
-  if (index === -1) {
-    newSelectedItems.push(itemId);
-  } else {
-    newSelectedItems.splice(index, 1);
-  }
+    if (index === -1) {
+      newSelectedItems.push(itemId);
+    } else {
+      newSelectedItems.splice(index, 1);
+    }
 
-  setSelectedItemsB(newSelectedItems);
-};
+    setSelectedItemsB(newSelectedItems);
+  };
 
-// Function to handle item selection for C
-const handleItemSelectC = (item) => {
-  const newSelectedItems = [...selectedItemsC];
-  const itemId = Number(item.id);
+  // Function to handle item selection for C
+  const handleItemSelectC = (item) => {
+    const newSelectedItems = [...selectedItemsC];
+    const itemId = Number(item.id);
 
-  const index = newSelectedItems.indexOf(itemId);
+    const index = newSelectedItems.indexOf(itemId);
 
-  if (index === -1) {
-    newSelectedItems.push(itemId);
-  } else {
-    newSelectedItems.splice(index, 1);
-  }
+    if (index === -1) {
+      newSelectedItems.push(itemId);
+    } else {
+      newSelectedItems.splice(index, 1);
+    }
 
-  setSelectedItemsC(newSelectedItems);
-};
+    setSelectedItemsC(newSelectedItems);
+  };
 
-// Get selected labels for A
-const getSelectedLabelsA = () => {
-  return transformedDataforGrades
-    .filter(item => selectedItemsA.includes(Number(item.id))) // Ensure item.id is a number
-    .map(item => item.name)
-    .join(', ');
-};
+  // Get selected labels for A
+  const getSelectedLabelsA = () => {
+    return transformedDataforGrades
+      .filter(item => selectedItemsA.includes(Number(item.id))) // Ensure item.id is a number
+      .map(item => item.name)
+      .join(', ');
+  };
 
-// Get selected labels for B
-const getSelectedLabelsB = () => {
-  return transformedDataforGrades
-    .filter(item => selectedItemsB.includes(Number(item.id)))
-    .map(item => item.name)
-    .join(', ');
-};
+  // Get selected labels for B
+  const getSelectedLabelsB = () => {
+    return transformedDataforGrades
+      .filter(item => selectedItemsB.includes(Number(item.id)))
+      .map(item => item.name)
+      .join(', ');
+  };
 
-// Get selected labels for C
-const getSelectedLabelsC = () => {
-  return transformedDataforGrades
-    .filter(item => selectedItemsC.includes(Number(item.id)))
-    .map(item => item.name)
-    .join(', ');
-};
+  // Get selected labels for C
+  const getSelectedLabelsC = () => {
+    return transformedDataforGrades
+      .filter(item => selectedItemsC.includes(Number(item.id)))
+      .map(item => item.name)
+      .join(', ');
+  };
 
-// Functions to open/close modals
-const openModalA = () => setModalVisibleA(true);
-const closeModalA = () => setModalVisibleA(false);
+  // Functions to open/close modals
+  const openModalA = () => setModalVisibleA(true);
+  const closeModalA = () => setModalVisibleA(false);
 
-const openModalB = () => setModalVisibleB(true);
-const closeModalB = () => setModalVisibleB(false);
+  const openModalB = () => setModalVisibleB(true);
+  const closeModalB = () => setModalVisibleB(false);
 
-const openModalC = () => setModalVisibleC(true);
-const closeModalC = () => setModalVisibleC(false);
+  const openModalC = () => setModalVisibleC(true);
+  const closeModalC = () => setModalVisibleC(false);
 
 
   const getprograme = () => getItemByItemcode(Number(editresult)).then((res) => {
@@ -146,7 +146,7 @@ const closeModalC = () => setModalVisibleC(false);
     totalFirstDistrictMarks: 0,
     totalSecondDistrictMarks: 0,
     totalThirdDistrictMarks: 0,
-    gradesonly:{}
+    gradesonly: {}
   });
 
   const [newItemCode, setNewItemCode] = useState(0)
@@ -163,7 +163,7 @@ const closeModalC = () => setModalVisibleC(false);
   // Populate values with the fetched result
   useEffect(() => {
     if (result) {
-      console.log(result,"reesess");
+      console.log(result, "reesess");
       setValues({
         itemcode: result.itemcode,
         resultid: result.$id,
@@ -177,16 +177,16 @@ const closeModalC = () => setModalVisibleC(false);
         totalFirstDistrictMarks: result.firstmark,
         totalSecondDistrictMarks: result.secondmark,
         totalThirdDistrictMarks: result.thirdmark,
-        gradesonly:result.gradesonly? JSON.parse(result.gradesonly):{}
+        gradesonly: result.gradesonly ? JSON.parse(result.gradesonly) : {}
 
       });
     }
     getprograme()
-  }, [result]);useEffect(() => {
+  }, [result]); useEffect(() => {
     if (result) {
       console.log(result, "reesess");
       const gradesOnlyParsed = result.gradesonly ? JSON.parse(result.gradesonly) : {};
-  
+
       // Set values, including parsed gradesonly
       setValues({
         itemcode: result.itemcode,
@@ -203,20 +203,20 @@ const closeModalC = () => setModalVisibleC(false);
         totalThirdDistrictMarks: result.thirdmark,
         gradesonly: gradesOnlyParsed,
       });
-  
+
       // Handle gradesonly-related state updates immediately
       if (gradesOnlyParsed) {
         const { A, B, C } = gradesOnlyParsed;
-  
+
         setSelectedItemsA(A && A.length > 0 ? [...A] : []); // Populate or reset A
         setSelectedItemsB(B && B.length > 0 ? [...B] : []); // Populate or reset B
         setSelectedItemsC(C && C.length > 0 ? [...C] : []); // Populate or reset C
       }
     }
-  
+
     getprograme(); // Call the function once result is processed
   }, [result]);
-  
+
 
 
 
@@ -298,7 +298,7 @@ const closeModalC = () => setModalVisibleC(false);
       secondmark: totalSecondDistrictMarks,
       thirdmark: totalThirdDistrictMarks,
       adminId: user.$id,
-      gradesOnly:[`{ "A": [${selectedItemsA}], "B": [${selectedItemsB}], "C": [${selectedItemsC}] }`]
+      gradesOnly: [`{ "A": [${selectedItemsA}], "B": [${selectedItemsB}], "C": [${selectedItemsC}] }`]
     };
 
     if (values.resultimagenew) {
@@ -306,7 +306,7 @@ const closeModalC = () => setModalVisibleC(false);
     }
 
     resultObject.itemcode = newItemCode !== 0 ? newItemCode : values.itemcode;
-    
+
 
     try {
       setLoading(true)
@@ -328,10 +328,10 @@ const closeModalC = () => setModalVisibleC(false);
   // Transform district data for the dropdown
 
   const transformedDataforGrades = districts ? districts.map((district) => ({
-      id: district.districtid,
-      label: `${district.districtid} . ${district.name}`,
-      name:district.name,
-    })) : [];
+    id: district.districtid,
+    label: `${district.districtid} . ${district.name}`,
+    name: district.name,
+  })) : [];
 
 
   const transformedData = districts
@@ -358,7 +358,7 @@ const closeModalC = () => setModalVisibleC(false);
   ];
 
   const renderDropdown = (label, districtKey, gradeKey) => {
-    
+
 
     return (
       <View className="bg-primary flex flex-row justify-evenly mt-7 w-full px-4">
@@ -477,145 +477,142 @@ const closeModalC = () => setModalVisibleC(false);
           </TouchableOpacity>
 
 
-         
-           
 
-         <View style={styles.container} className="mt-4">
-         <Text className="text-base text-gray-100 font-pmedium">A Grade only</Text>
 
-  {/* Display selected items for A */}
-  <TouchableOpacity style={styles.selectedItemsContainer} onPress={openModalA}>
-    <Text style={styles.selectedText}>
-      {selectedItemsA.length > 0 ? getSelectedLabelsA() : 'Select Items for A'}
-    </Text>
-  </TouchableOpacity>
 
-  {/* Modal for A */}
-  <Modal
-    visible={modalVisibleA}
-    animationType="slide"
-    transparent={true}
-    onRequestClose={closeModalA}
-  >
-    <TouchableWithoutFeedback onPress={closeModalA}>
-      <View style={styles.modalOverlay}>
-        <TouchableWithoutFeedback>
-          <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModalA}>
-              <Text style={styles.closeButtonText}>Close</Text>
+          <View style={styles.container} className="mt-4">
+            <Text className="text-base text-gray-100 font-pmedium">A Grade only</Text>
+
+            {/* Display selected items for A */}
+            <TouchableOpacity style={styles.selectedItemsContainer} onPress={openModalA}>
+              <Text style={styles.selectedText}>
+                {selectedItemsA.length > 0 ? getSelectedLabelsA() : 'Select Items for A'}
+              </Text>
             </TouchableOpacity>
-            <FlatList
-              data={transformedDataforGrades}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.item,
-                    selectedItemsA.includes(Number(item.id)) && styles.selectedItem,
-                  ]}
-                  onPress={() => handleItemSelectA(item)}
-                >
-                  <Text style={styles.itemText}>{item.label}</Text>
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    </TouchableWithoutFeedback>
-  </Modal>
 
-  {/* Display selected items for B */}
-  <Text className="text-base text-gray-100 font-pmedium">B Grade only</Text>
+            {/* Modal for A */}
+            <Modal
+              visible={modalVisibleA}
+              animationType="slide"
+              transparent={true}
+              onRequestClose={closeModalA}
+            >
+              <TouchableWithoutFeedback onPress={closeModalA}>
+                <View style={styles.modalOverlay}>
+                  <TouchableWithoutFeedback>
+                    <View style={styles.modalContent}>
+                      <TouchableOpacity style={styles.closeButton} onPress={closeModalA}>
+                        <Text style={styles.closeButtonText}>Close</Text>
+                      </TouchableOpacity>
+                      <FlatList
+                        data={transformedDataforGrades}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            style={[
+                              styles.item,
+                              selectedItemsA.includes(Number(item.id)) && styles.selectedItem,
+                            ]}
+                            onPress={() => handleItemSelectA(item)}
+                          >
+                            <Text style={styles.itemText}>{item.label}</Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
 
-  <TouchableOpacity style={styles.selectedItemsContainer} onPress={openModalB}>
-    <Text style={styles.selectedText}>
-      {selectedItemsB.length > 0 ? getSelectedLabelsB() : 'Select Items for B'}
-    </Text>
-  </TouchableOpacity>
+            {/* Display selected items for B */}
+            <Text className="text-base text-gray-100 font-pmedium">B Grade only</Text>
 
-  {/* Modal for B */}
-  <Modal
-    visible={modalVisibleB}
-    animationType="slide"
-    transparent={true}
-    onRequestClose={closeModalB}
-  >
-    <TouchableWithoutFeedback onPress={closeModalB}>
-      <View style={styles.modalOverlay}>
-        <TouchableWithoutFeedback>
-          <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModalB}>
-              <Text style={styles.closeButtonText}>Close</Text>
+            <TouchableOpacity style={styles.selectedItemsContainer} onPress={openModalB}>
+              <Text style={styles.selectedText}>
+                {selectedItemsB.length > 0 ? getSelectedLabelsB() : 'Select Items for B'}
+              </Text>
             </TouchableOpacity>
-            <FlatList
-              data={transformedDataforGrades}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.item,
-                    selectedItemsB.includes(Number(item.id)) && styles.selectedItem,
-                  ]}
-                  onPress={() => handleItemSelectB(item)}
-                >
-                  <Text style={styles.itemText}>{item.label}</Text>
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    </TouchableWithoutFeedback>
-  </Modal>
 
-  <Text className="text-base text-gray-100 font-pmedium">C Grade only</Text>
+            {/* Modal for B */}
+            <Modal
+              visible={modalVisibleB}
+              animationType="slide"
+              transparent={true}
+              onRequestClose={closeModalB}
+            >
+              <TouchableWithoutFeedback onPress={closeModalB}>
+                <View style={styles.modalOverlay}>
+                  <TouchableWithoutFeedback>
+                    <View style={styles.modalContent}>
+                      <TouchableOpacity style={styles.closeButton} onPress={closeModalB}>
+                        <Text style={styles.closeButtonText}>Close</Text>
+                      </TouchableOpacity>
+                      <FlatList
+                        data={transformedDataforGrades}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            style={[
+                              styles.item,
+                              selectedItemsB.includes(Number(item.id)) && styles.selectedItem,
+                            ]}
+                            onPress={() => handleItemSelectB(item)}
+                          >
+                            <Text style={styles.itemText}>{item.label}</Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
 
-  {/* Display selected items for C */}
-  <TouchableOpacity style={styles.selectedItemsContainer} onPress={openModalC}>
-    <Text style={styles.selectedText}>
-      {selectedItemsC.length > 0 ? getSelectedLabelsC() : 'Select Items for C'}
-    </Text>
-  </TouchableOpacity>
+            <Text className="text-base text-gray-100 font-pmedium">C Grade only</Text>
 
-  {/* Modal for C */}
-  <Modal
-    visible={modalVisibleC}
-    animationType="slide"
-    transparent={true}
-    onRequestClose={closeModalC}
-  >
-    <TouchableWithoutFeedback onPress={closeModalC}>
-      <View style={styles.modalOverlay}>
-        <TouchableWithoutFeedback>
-          <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModalC}>
-              <Text style={styles.closeButtonText}>Close</Text>
+            {/* Display selected items for C */}
+            <TouchableOpacity style={styles.selectedItemsContainer} onPress={openModalC}>
+              <Text style={styles.selectedText}>
+                {selectedItemsC.length > 0 ? getSelectedLabelsC() : 'Select Items for C'}
+              </Text>
             </TouchableOpacity>
-            <FlatList
-              data={transformedDataforGrades}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.item,
-                    selectedItemsC.includes(Number(item.id)) && styles.selectedItem,
-                  ]}
-                  onPress={() => handleItemSelectC(item)}
-                >
-                  <Text style={styles.itemText}>{item.label}</Text>
-                </TouchableOpacity>
-              )}
-            />
+
+            {/* Modal for C */}
+            <Modal
+              visible={modalVisibleC}
+              animationType="slide"
+              transparent={true}
+              onRequestClose={closeModalC}
+            >
+              <TouchableWithoutFeedback onPress={closeModalC}>
+                <View style={styles.modalOverlay}>
+                  <TouchableWithoutFeedback>
+                    <View style={styles.modalContent}>
+                      <TouchableOpacity style={styles.closeButton} onPress={closeModalC}>
+                        <Text style={styles.closeButtonText}>Close</Text>
+                      </TouchableOpacity>
+                      <FlatList
+                        data={transformedDataforGrades}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            style={[
+                              styles.item,
+                              selectedItemsC.includes(Number(item.id)) && styles.selectedItem,
+                            ]}
+                            onPress={() => handleItemSelectC(item)}
+                          >
+                            <Text style={styles.itemText}>{item.label}</Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
           </View>
-        </TouchableWithoutFeedback>
-      </View>
-    </TouchableWithoutFeedback>
-  </Modal>
-</View>
-
-
-
 
           <CustomButton
             title="Update Result"
@@ -689,7 +686,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
   },
-  dropdownOnly:{
+  dropdownOnly: {
     height: 50,
     borderColor: 'gray',
     backgroundColor: "white",

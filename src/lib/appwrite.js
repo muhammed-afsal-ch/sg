@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { Client, Account, ID, Avatars, Databases, Query, Storage } from 'react-native-appwrite';
 
 
@@ -14,10 +15,10 @@ export const config = {
   districtsCollectionId: "674c2ca100265cbd5cc2",
   resultsCollectionId: "6753c04b001397d9613e",
   messageCollectionId: "674d817e00008f5203d5",
-  settingsCollectionId:"67556fe5001614d4bf88",
-  downloadsCollectionId:"675585c8000dea692e41",
+  settingsCollectionId: "67556fe5001614d4bf88",
+  downloadsCollectionId: "675585c8000dea692e41",
   galleryStorageId: "674e76b20013b1d3dcb4",
-  postsCollectionID:"675713f90017735500fb",
+  postsCollectionID: "675713f90017735500fb",
   storageId: '674c2d26001b524033e3'
 }
 
@@ -140,8 +141,8 @@ export const getAllPosts = async (page = 1, limit = 10) => {
       postsCollectionID,
       [
         Query.orderDesc('$createdAt'),
-        Query.limit(limit),  // Limit the number of posts
-        Query.offset(offset)  // Skip the number of posts based on the page
+        Query.limit(limit),  
+        Query.offset(offset) 
       ]
     );
 
@@ -167,7 +168,7 @@ export const getLatestPosts = async () => {
 }
 
 export const searchPosts = async (query) => {
-  console.log(query,"qqq");
+
   try {
     const posts = await databases.listDocuments(
       databaseId,
@@ -178,7 +179,7 @@ export const searchPosts = async (query) => {
     return posts.documents;
   } catch (error) {
     console.error('Error searching posts:', error);
-    
+
   }
 };
 
@@ -341,622 +342,10 @@ export const saveQuizResponse = async ({ name, mobile, place, total }) => {
     return newQuizResponse
   } catch (error) {
     console.log(error);
-    throw new Error(error);
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
 
-export const addProgram = async () => {
-
-
-  const documents = [
-    {
-      "itemcode": 1,
-      "itemname": "Faathiha Paaraayanam",
-      "itemlabel": "ഫാത്തിഹ പാരായണം",
-      "category_code": "G.K",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 2,
-      "itemname": "Colouring",
-      "itemlabel": "കളറിംഗ്",
-      "category_code": "G.K",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 3,
-      "itemname": "Islamic Song",
-      "itemlabel": "ഇസ്ലാമിക ഗാനം",
-      "category_code": "G.K",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 4,
-      "itemname": "Book Reading",
-      "itemlabel": "പുസ്‌തക വായന",
-      "category_code": "G.K",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 5,
-      "itemname": "Handwriting Arabic",
-      "itemlabel": "കയ്യെഴുത്ത് (അറബി)",
-      "category_code": "G.K",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 6,
-      "itemname": "Handwriting English",
-      "itemlabel": "കയ്യെഴുത്ത് (ഇംഗ്ലീഷ്)",
-      "category_code": "G.K",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 7,
-      "itemname": "Qiraath",
-      "itemlabel": "ഖിറാഅത്ത്",
-      "category_code": "G.SJ",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 8,
-      "itemname": "Madhunnabi Song",
-      "itemlabel": "മദ്ഹുന്നബി ഗാനം",
-      "category_code": "G.SJ",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 9,
-      "itemname": "Islamic Popular Song",
-      "itemlabel": "ഇസ്‌ലാമിക് പോപ്പുലർ സോങ്",
-      "category_code": "G.SJ",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 10,
-      "itemname": "Arabic Song",
-      "itemlabel": "അറബി ഗാനം",
-      "category_code": "G.SJ",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 11,
-      "itemname": "Story Telling",
-      "itemlabel": "കഥാ കഥനം",
-      "category_code": "G.SJ",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 12,
-      "itemname": "Quiz",
-      "itemlabel": "ക്വിസ്സ്",
-      "category_code": "G.SJ",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 13,
-      "itemname": "Water Coloring",
-      "itemlabel": "ചിത്രരചന (വാട്ടർ കളർ )",
-      "category_code": "G.SJ",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 14,
-      "itemname": "Memory Test",
-      "itemlabel": "ഓർമ്മ പരിശോധന",
-      "category_code": "G.SJ",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 15,
-      "itemname": "Qiraath",
-      "itemlabel": "ഖിറാഅത്ത്",
-      "category_code": "G.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 16,
-      "itemname": "Mappila Pattu",
-      "itemlabel": "മാപ്പിളപ്പാട്ട്",
-      "category_code": "G.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 17,
-      "itemname": "Madhunnabi Song",
-      "itemlabel": "മദ്ഹുന്നബി ഗാനം",
-      "category_code": "G.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 18,
-      "itemname": "Organizational Song",
-      "itemlabel": "സംഘടനാഗാനം",
-      "category_code": "G.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 19,
-      "itemname": "Malayalam Thanima",
-      "itemlabel": "മലയാളത്തനിമ",
-      "category_code": "G.J",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 20,
-      "itemname": "Mal. Elocution",
-      "itemlabel": "മലയാള പ്രസംഗം",
-      "category_code": "G.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 21,
-      "itemname": "Azan",
-      "itemlabel": "വാങ്ക്",
-      "category_code": "G.J",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 22,
-      "itemname": "Quiz",
-      "itemlabel": "ക്വിസ്സ്",
-      "category_code": "G.J",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 23,
-      "itemname": "Vocabulary Contest",
-      "itemlabel": "ഇംഗ്ലീഷ് പദപ്പയറ്റ്",
-      "category_code": "G.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 24,
-      "itemname": "Pencil Drawing",
-      "itemlabel": "പെൻസിൽ ഡ്രോയിങ്",
-      "category_code": "G.J",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 25,
-      "itemname": "Qiraath",
-      "itemlabel": "ഖിറാഅത്ത്",
-      "category_code": "G.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 26,
-      "itemname": "Commemorative Song",
-      "itemlabel": "അനുസ്‌മരണ ഗാനം",
-      "category_code": "G.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 27,
-      "itemname": "Mappilappattu",
-      "itemlabel": "മാപ്പിളപ്പാട്ട്",
-      "category_code": "G.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 28,
-      "itemname": "Malayalam Elocution",
-      "itemlabel": "മലയാള പ്രസംഗം",
-      "category_code": "G.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 29,
-      "itemname": "Azan",
-      "itemlabel": "വാങ്ക്",
-      "category_code": "G.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 30,
-      "itemname": "Padhya Parayanam",
-      "itemlabel": "പദ്യ പാരായണം (മലയാളം)",
-      "category_code": "G.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 31,
-      "itemname": "Padi Parayal",
-      "itemlabel": "പാടി പറയൽ",
-      "category_code": "G.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 32,
-      "itemname": "Allafal Alif",
-      "itemlabel": "അല്ലഫൽ അലിഫ്",
-      "category_code": "G.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 33,
-      "itemname": "Quiz",
-      "itemlabel": "ക്വിസ്സ്",
-      "category_code": "G.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 34,
-      "itemname": "Poster Designing",
-      "itemlabel": "പോസ്റ്റർ ഡിസൈനിംഗ്",
-      "category_code": "G.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 35,
-      "itemname": "Digital Poster Design",
-      "itemlabel": "ഡിജിറ്റൽ പോസ്റ്റർ",
-      "category_code": "G.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 36,
-      "itemname": "News Reading",
-      "itemlabel": "വാർത്താ വായന",
-      "category_code": "G.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 37,
-      "itemname": "Essay writing (Mal)",
-      "itemlabel": "മലയാള പ്രബന്ധം",
-      "category_code": "G.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 38,
-      "itemname": "Arabic Song",
-      "itemlabel": "അറബിഗാനം",
-      "category_code": "G.SS",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 39,
-      "itemname": "Mappilappattu",
-      "itemlabel": "മാപ്പിളപ്പാട്ട്",
-      "category_code": "G.SS",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 40,
-      "itemname": "Devotional Song",
-      "itemlabel": "ഭക്തി ഗാനം",
-      "category_code": "G.SS",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 41,
-      "itemname": "Announcement",
-      "itemlabel": "അനൗൺസ്മെന്റ്",
-      "category_code": "G.SS",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 42,
-      "itemname": "Situation Management",
-      "itemlabel": "സിറ്റുവേഷൻ മാനേജ്‌മന്റ്റ്",
-      "category_code": "G.SS",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 43,
-      "itemname": "History Talk",
-      "itemlabel": "ഹിസ്റ്ററി ടോക്ക്",
-      "category_code": "G.SS",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 44,
-      "itemname": "Quiz",
-      "itemlabel": "ക്വിസ്സ്",
-      "category_code": "G.SS",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 45,
-      "itemname": "Song Writing & Singing",
-      "itemlabel": "ഗാന രചന & ആലാപനം",
-      "category_code": "G.SS",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 46,
-      "itemname": "Newsletter Preparation",
-      "itemlabel": "വാർത്താകുറിപ്പ് തയ്യാറാക്കൽ",
-      "category_code": "G.SS",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 47,
-      "itemname": "Calligraphy",
-      "itemlabel": "കാലിഗ്രാഫി അറബി",
-      "category_code": "G.SS",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 48,
-      "itemname": "Versification (Mal)",
-      "itemlabel": "കവിതാ രചന (മലയാളം)",
-      "category_code": "G.SS",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 49,
-      "itemname": "Digital Poster Design",
-      "itemlabel": "ഡിജിറ്റൽ പോസ്റ്റർ",
-      "category_code": "G.SS",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 50,
-      "itemname": "Reels Making",
-      "itemlabel": "റീൽസ് മേക്കിങ്",
-      "category_code": "G.SS",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 51,
-      "itemname": "Group song (Mal)",
-      "itemlabel": "സംഘഗാനം (മലയാളം)",
-      "category_code": "G.G",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 52,
-      "itemname": "Group song (Mappila)",
-      "itemlabel": "സംഘഗാനം (മാപ്പിളപ്പാട്ട്)",
-      "category_code": "G.G",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 53,
-      "itemname": "Burda recitation",
-      "itemlabel": "ബുർദ ആലാപനം",
-      "category_code": "G.G",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 54,
-      "itemname": "Mashup Group song",
-      "itemlabel": "മാഷപ്പ് ഗാനം (മലയാളം)",
-      "category_code": "G.G",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 55,
-      "itemname": "Duff muttu",
-      "itemlabel": "ദഫ് മുട്ട്",
-      "category_code": "G.G",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 56,
-      "itemname": "Bhakthigeeth",
-      "itemlabel": "ഭക്തിഗീത്",
-      "category_code": "G.G",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 57,
-      "itemname": "Qiraath",
-      "itemlabel": "ഖിറാഅത്ത്",
-      "category_code": "T.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 58,
-      "itemname": "Organizational Song",
-      "itemlabel": "സംഘടനാഗാനം",
-      "category_code": "T.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 59,
-      "itemname": "Urudu Song",
-      "itemlabel": "ഉറുദു ഗാനം",
-      "category_code": "T.J",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 60,
-      "itemname": "Malayalam Elocution",
-      "itemlabel": "മലയാള പ്രസംഗം",
-      "category_code": "T.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 61,
-      "itemname": "Padhya Parayanam",
-      "itemlabel": "പദ്യ പാരായണം (അറബി)",
-      "category_code": "T.J",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 62,
-      "itemname": "Azan",
-      "itemlabel": "വാങ്ക്",
-      "category_code": "T.J",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 63,
-      "itemname": "Nano Literature",
-      "itemlabel": "നാനോ ലിറ്ററേച്ചർ",
-      "category_code": "T.J",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 64,
-      "itemname": "Essay writing (Mal)",
-      "itemlabel": "മലയാള പ്രബന്ധം",
-      "category_code": "T.J",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 65,
-      "itemname": "Qiraath",
-      "itemlabel": "ഖിറാഅത്ത്",
-      "category_code": "T.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 66,
-      "itemname": "Arabic Song",
-      "itemlabel": "അറബിക് ഗാനം",
-      "category_code": "T.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 67,
-      "itemname": "Commemorative Song",
-      "itemlabel": "അനുസ്‌മരണ ഗാനം",
-      "category_code": "T.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 68,
-      "itemname": "Mappilappattu",
-      "itemlabel": "മാപ്പിളപ്പാട്ട്",
-      "category_code": "T.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 69,
-      "itemname": "Malayalam Elocution",
-      "itemlabel": "മലയാള പ്രസംഗം",
-      "category_code": "T.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 70,
-      "itemname": "Arabic Elocution",
-      "itemlabel": "അറബി പ്രസംഗം",
-      "category_code": "T.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 71,
-      "itemname": "English Elocution",
-      "itemlabel": "ഇംഗ്ലീഷ് പ്രസംഗം",
-      "category_code": "T.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 72,
-      "itemname": "Essay writing (Mal)",
-      "itemlabel": "മലയാള പ്രബന്ധം",
-      "category_code": "T.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 73,
-      "itemname": "Collage",
-      "itemlabel": "കൊളാഷ്",
-      "category_code": "T.S",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 74,
-      "itemname": "Situation Management",
-      "itemlabel": "സിറ്റുവേഷൻ മാനേജ്‌മന്റ്റ്",
-      "category_code": "T.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 75,
-      "itemname": "Calligraphy",
-      "itemlabel": "കാലിഗ്രാഫി അറബി",
-      "category_code": "T.S",
-      "point_category": "B"
-    },
-    {
-      "itemcode": 76,
-      "itemname": "Versification (Mal)",
-      "itemlabel": "കവിതാ രചന (മലയാളം)",
-      "category_code": "T.S",
-      "point_category": "C"
-    },
-    {
-      "itemcode": 77,
-      "itemname": "Group Song Mappila",
-      "itemlabel": "സംഘഗാനം (മാപ്പിളപ്പാട്ട്)",
-      "category_code": "T.G",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 78,
-      "itemname": "Burda Recitation",
-      "itemlabel": "ബുർദ ആലാപനം",
-      "category_code": "T.G",
-      "point_category": "A"
-    },
-    {
-      "itemcode": 79,
-      "itemname": "Bhakthigeeth",
-      "itemlabel": "ഭക്തിഗീത്",
-      "category_code": "T.G",
-      "point_category": "A"
-    }
-  ];
-
-  // const districts = [
-  //   { "districtid": 1, "name": "ALAPPUZHA", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 2, "name": "ERNAKULAM", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 3, "name": "IDUKKI", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 4, "name": "KANNUR", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 5, "name": "KASARAGOD", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 6, "name": "KOLLAM", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 7, "name": "KOTTAYAM", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 8, "name": "KOZHIKKODE", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 9, "name": "LAKSHADWEEP", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 10, "name": "MALAPPURAM EAST", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 11, "name": "MALAPPURAM WEST", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 12, "name": "PALAKKAD", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 13, "name": "THIRUVANANTHAPUARAM", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 14, "name": "THRISSUR", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 15, "name": "WAYANAD", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null },
-  //   { "districtid": 16, "name": "NILAGIRI", "GK": null, "GSJ": null, "GJ": null, "GS": null, "GSS": null, "GG": null, "TJ": null, "TS": null, "TG": null }
-  // ]
-
-  const districts = [
-    { districtid: 1, name: "ALAPPUZHA" },
-    { districtid: 2, name: "ERNAKULAM" },
-    { districtid: 3, name: "IDUKKI" },
-    { districtid: 4, name: "KANNUR" },
-    { districtid: 5, name: "KASARAGOD" },
-    { districtid: 6, name: "KOLLAM" },
-    { districtid: 7, name: "KOTTAYAM" },
-    { districtid: 8, name: "KOZHIKKODE" },
-    { districtid: 9, name: "LAKSHADWEEP" },
-    { districtid: 10, name: "MALAPPURAM EAST" },
-    { districtid: 11, name: "MALAPPURAM WEST" },
-    { districtid: 12, name: "PALAKKAD" },
-    { districtid: 13, name: "THIRUVANANTHAPUARAM" },
-    { districtid: 14, name: "THRISSUR" },
-    { districtid: 15, name: "WAYANAD" },
-    { districtid: 16, name: "NILAGIRI" }
-  ]
-
-
-
-
-  documents.forEach(doc => {
-
-    databases.createDocument(databaseId, programsCollectionId, ID.unique(), doc)
-      .then(response => {
-        console.log('Document created:', response);
-      })
-      .catch(error => {
-        console.error('Error creating document:', error);
-      });
-  });
-
-}
 
 export const getAllDistrics = async () => {
   try {
@@ -968,10 +357,9 @@ export const getAllDistrics = async () => {
 
     return posts.documents
   } catch (error) {
-    throw new Error(error)
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
-
 
 
 
@@ -994,6 +382,7 @@ export const getItemByItemcode = async (itemcode) => {
   }
 }
 
+
 export const getAllPrgrams = async () => {
   try {
 
@@ -1001,8 +390,8 @@ export const getAllPrgrams = async () => {
       databaseId,
       programsCollectionId,
     )
-      return program.documents
-  
+    return program.documents
+
   } catch (error) {
     console.log(error);
   }
@@ -1023,8 +412,7 @@ export const getDistrictScores = async (districtId) => {
     }
 
   } catch (error) {
-    throw new Error(error)
-    console.log(error);
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
 
@@ -1033,14 +421,6 @@ export const getDistrictScores = async (districtId) => {
 
 export const addNewResult = async (form) => {
   try {
-    // const newResult = await account.create(
-    //     ID.unique(),
-    //     email,
-    //     password,
-    //     username
-    // )
-
-    // if (!newResult) throw Error;
 
     const {
       itemcode,
@@ -1056,36 +436,13 @@ export const addNewResult = async (form) => {
       firstmark,
       secondmark,
       thirdmark,
-     gradesOnly } = form
-
-      // const { category_code } = await getItemByItemcode(itemcode);
-
-    // const districts = {
-    //   "G.K": "GK",
-    //   "G.S": "GS",
-    //   "G.SJ": "GSJ",
-    //   "G.J": "GJ",
-    //   "G.S": "GS",
-    //   "G.SS": "GSS",
-    //   "G.G": "GG",
-    //   "T.J": "TJ",
-    //   "T.S": "TS",
-    //   "T.G": "TG"
-    // }
-    // const category = districts[category_code];
-
-    // const { getFirstdristrictScore } = await getDistrictScores(firstdistrict);
-
-    // const { getSeconddristrictScore } = await getDistrictScores(seconddistrict);
-
-    // const { getThirddristrictScore } = await getDistrictScores(thirddistrict);
-
-    console.log(gradesOnly,"gradeeee");
+      gradesOnly } = form
 
     const categorycode = await getItemByItemcode(itemcode).then(res => {
       return res.category_code;
     }).catch(error => {
       console.error("Error fetching item:", error);
+      Alert.alert('Something went wrong', 'Please check your connection or try again later.');
     });
 
     const [Image] = await Promise.all([
@@ -1112,7 +469,7 @@ export const addNewResult = async (form) => {
         firstmark,
         secondmark,
         thirdmark,
-        gradesonly:gradesOnly
+        gradesonly: gradesOnly
       }
     )
 
@@ -1133,25 +490,75 @@ export const getAllResults = async () => {
     )
     return posts.documents
   } catch (error) {
-    throw new Error(error)
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
 
-export const getLatestThreePosts = async () => {
+
+export const getAllResultsAndPostsGrouped = async (page = 1, limit = 10) => {
   try {
+
+    const offset = (page - 1) * limit;
+
+    // Step 1: Fetch Posts with Pagination
     const posts = await databases.listDocuments(
+      databaseId,
+      postsCollectionID,
+      [
+        Query.orderDesc('$createdAt'), // Sort by createdAt
+        Query.limit(limit),  // Limit the number of posts per page
+        Query.offset(offset),  // Skip based on the page number
+      ]
+    );
+
+    // Step 2: Fetch Results and Add Additional Data
+    const results = await databases.listDocuments(
       databaseId,
       resultsCollectionId,
       [
-        Query.limit(3), // Limit the result to 3 documents
-        Query.orderDesc('$createdAt') // Order documents by creation date in descending order
+        Query.orderDesc('$createdAt'), // Sort by createdAt
+        Query.equal('publish', true), // Only published results
+        Query.limit(limit),  // Limit the number of results per page
+        Query.offset(offset),  // Skip based on the page number
       ]
-    )
-    return posts.documents // Return the documents
+    );
+
+    // Fetch additional item details for each result
+    const updatedResults = await Promise.all(
+      results.documents.map(async (item) => {
+        try {
+          const { itemlabel, category_code } = await getItemByItemcode(item.itemcode);
+          return {
+            ...item,
+            itemlabel,
+            category_code,
+            type: 'result', // Tagging as result
+          };
+        } catch (error) {
+          console.error(`Error fetching details for item_code ${item.itemcode}:`, error);
+          return { ...item, type: 'result' }; // Return the item as is if error occurs
+        }
+      })
+    );
+
+    // Step 3: Group results and posts together, tagged by type (post/result)
+    const allItems = [
+      ...posts.documents.map((post) => ({ ...post, type: 'post' })),
+      ...updatedResults, // Already tagged as 'result' in the previous map
+    ];
+
+    // Step 4: Sort all items by createdAt
+    const sortedItems = allItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Step 5: Return the grouped and sorted result
+    return sortedItems;
+
   } catch (error) {
-    console.error(error)
+    console.error('Error fetching results and posts:', error);
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
-}
+};
+
 
 
 
@@ -1180,12 +587,11 @@ export const getTotalPointsForDistrict = async (districtId) => {
       }
     });
 
-    // Return the total points for the given district
-    //console.log(totalPoints, "hhhhhhhhhhhh");
+
     return totalPoints;
 
   } catch (error) {
-    throw new Error('Error fetching documents or calculating total points: ' + error.message);
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
 
@@ -1203,7 +609,7 @@ export const saveMessage = async ({ name, mobile, message }) => {
     return newMessage
   } catch (error) {
     console.log(error);
-    throw new Error(error);
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
 
@@ -1274,6 +680,7 @@ export const getResultByItemcode = async (itemcode) => {
 
   } catch (error) {
     console.log(error);
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
 
@@ -1328,7 +735,7 @@ export const updateResult = async (form) => {
       firstmark,
       secondmark,
       thirdmark,
-      gradesonly:gradesOnly
+      gradesonly: gradesOnly
     };
 
     // Remove any `null` values to avoid overwriting with empty fields
@@ -1367,7 +774,7 @@ export const getSettings = async (item) => {
       return status.documents[0]
     }
   } catch (error) {
-    throw new Error(error)
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
 
@@ -1383,29 +790,11 @@ export const getAllDownloadFiles = async () => {
 
     return posts.documents
   } catch (error) {
-    throw new Error(error)
+    Alert.alert('Something went wrong', 'Please check your connection or try again later.');
   }
 }
 
 
-// export const createPost = async (form) => {
-//   try {
-//     const [thumbnailUrl] = await Promise.all([
-//       uploadFile(form.thumbnail, 'image'),
-//     ]);
-
-//     const newPost = await databases.createDocument(
-//       databaseId, postsCollectionID, ID.unique(),
-//       {
-//         thumbnail: thumbnailUrl,
-//         caption: form.caption,
-//       }
-//     )
-//     return newPost
-//   } catch (error) {
-//     throw new Error(error)
-//   }
-// }
 
 export const createPost = async (form) => {
   try {

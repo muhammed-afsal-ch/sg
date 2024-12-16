@@ -8,10 +8,10 @@ const SearchInput = () => {
   const [query, setQuery] = useState("");
 
   const handleSearch = () => {
-    if (query === "") return; 
+    if (query === "") return;
 
     router.push(`/results?homequery=${query}`);
-    setQuery(""); 
+    setQuery("");
   };
 
   return (

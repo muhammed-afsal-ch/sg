@@ -28,7 +28,6 @@ const ScoreBoard = () => {
 
 
 
-
   const getcat = (itemcode, callback) => {
     try {
       getItemByItemcode(itemcode)
@@ -127,12 +126,10 @@ const ScoreBoard = () => {
     return acc;
   }, {});
 
-  // Now, let's process the grouped data to assign the "First", "Second", and "Third" labels:
+
   for (const districtId in groupedData) {
-    //console.log(`District ID: ${districtId}`);
 
     for (const category in groupedData[districtId].categories) {
-      //console.log(`  Category: ${category}`);
 
       const items = groupedData[districtId].categories[category];
       items.sort((a, b) => b.mark - a.mark);
@@ -143,16 +140,9 @@ const ScoreBoard = () => {
         // Assign label based on the source of the mark
         item.label = item.source === 'first' ? 'First' : item.source === 'second' ? 'Second' : 'Third';
 
-        //console.log(`- Item Code: ${item.itemCode}, Mark: ${item.mark}, Source: ${item.source}, Grade: ${item.grade}, Label: ${item.label}`);
       });
     }
   }
-  //console.log(groupedData);
-  //console.log("Gggggggggggg details:", JSON.stringify(groupedData, null, 2));
-
-
-  // Step 1: Calculate the grade marks (onlyGradeMarks)
-  // Function to calculate onlyGradeMarks from gradesonly
 
 
   const calculateGradeMarksWithDetails = async (data) => {
@@ -369,67 +359,6 @@ const ScoreBoard = () => {
   });
 
 
-  // useEffect(() => {
-  //   if (latestAllResults && districts) {
-  //     const fetchData = async () => {
-  //       try {
-  //         // Ensure async data processing is completed before updating state
-  //         const { districtCategoryMarks, totals, generalTotals, twalabaTotals } = await calculateDistrictData(latestAllResults);
-  //         setDistrictCategoryMarks(districtCategoryMarks);
-  //         setDistrictTotals(totals);
-  //         setGeneralTotals(generalTotals);
-  //         setTwalabaTotals(twalabaTotals);
-  //         setIsLoading(false);
-  //       } catch (error) {
-  //         console.error("Error fetching district data:", error);
-  //         setIsLoading(false); // Handle any errors gracefully
-  //       }
-  //     };
-  //     fetchData();
-  //   }
-  // }, [latestAllResults, districts]);
-
-
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (latestAllResults && districts) {
-  //       try {
-  //         // Ensure async data processing is completed before updating state
-  //         const {
-  //           districtCategoryMarks,
-  //           totals,
-  //           generalTotals,
-  //           twalabaTotals,
-  //           gradesWithDetails
-  //         } = await calculateDistrictData(latestAllResults);
-
-  //         // Check if gradesWithDetails is defined before updating state
-  //         if (gradesWithDetails) {
-  //           setGradeMarksDetails((prevDetails) => {
-  //             if (JSON.stringify(prevDetails) !== JSON.stringify(gradesWithDetails)) {
-  //               return gradesWithDetails;
-  //             }
-  //             return prevDetails;
-  //           });
-  //         }
-
-  //         // Update district-related states
-  //         setDistrictCategoryMarks(districtCategoryMarks);
-  //         setDistrictTotals(totals);
-  //         setGeneralTotals(generalTotals);
-  //         setTwalabaTotals(twalabaTotals);
-
-  //         setIsLoading(false);
-  //       } catch (error) {
-  //         console.error("Error fetching district data:", error);
-  //         setIsLoading(false); // Handle errors gracefully
-  //       }
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [latestAllResults, districts]); // Dependencies
 
   const fetchData = async () => {
     if (latestAllResults && districts) {

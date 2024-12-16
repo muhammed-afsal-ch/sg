@@ -22,22 +22,22 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
     'T.S': 'Twalaba Senior',
     'T.G': 'Twalaba Group'
   };
-  
+
   const { user } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
-   const [imageHeight, setImageHeight] = useState(0); // Default height
+  const [imageHeight, setImageHeight] = useState(0); // Default height
 
-   useEffect(() => {
+  useEffect(() => {
     // Get the image dimensions to calculate the height based on its aspect ratio
     Image.getSize(thumbnail, (width, height) => {
       // Calculate the aspect ratio
       const aspectRatio = height / width;
-      
+
       // Assuming you want to use the full screen width, set the width to 'w-full' (full width of the container)
       const screenWidth = 375; // Or use `Dimensions.get('window').width` to get the dynamic screen width
       const calculatedHeight = screenWidth * aspectRatio;
-      
+
       setImageHeight(calculatedHeight); // Set the height based on the aspect ratio
     });
   }, [thumbnail]);
@@ -53,7 +53,7 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
 
       // Step 2: Share image with a caption
       await shareAsync(downloadResult.uri, {
-        message: `Check out this item: ${item_name}\nCategory: ${category}`, // This is the caption you want to share
+        message: `Check out this item: ${item_name}\nCategory: ${category} @Sargalayam App`, // This is the caption you want to share
       });
 
       setIsLoading(false);
@@ -155,14 +155,14 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
 
         <View className=" flex flex-row">
           <TouchableOpacity onPress={download}>
-          <View className="p-4 rounded-full">
-            <Image source={icons.download} className="w-5 h-5" resizeMode="contain" />
+            <View className="p-4 rounded-full">
+              <Image source={icons.download} className="w-5 h-5" resizeMode="contain" />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleShare}>
-          <View className="p-4 rounded-full">
-            <Image source={icons.share} className="w-5 h-5" resizeMode="contain" />
+            <View className="p-4 rounded-full">
+              <Image source={icons.share} className="w-5 h-5" resizeMode="contain" />
             </View>
           </TouchableOpacity>
 
@@ -173,8 +173,8 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
               }}
             >
               <View className="p-4 rounded-full">
-              <Image source={icons.edit} className="w-5 h-5" resizeMode="contain" />
-            </View>
+                <Image source={icons.edit} className="w-5 h-5" resizeMode="contain" />
+              </View>
             </TouchableOpacity>
           )}
         </View>
@@ -183,13 +183,13 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
       {isLoading && (
         <View
           style={{
-            position: 'absolute', 
-            top: 0, 
-            left: 0, 
-            right: 0, 
-            bottom: 0, 
-            justifyContent: 'center', 
-            alignItems: 'center', 
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
             zIndex: 1000,
           }}
         >
@@ -201,7 +201,7 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
         <Modal visible={true} transparent={true} onRequestClose={closeModal} className="w-full" animationType="fade">
           <ImageViewer
             imageUrls={images}
-            renderIndicator={()=>null}
+            renderIndicator={() => null}
             saveToLocalByLongPress={false}
             renderHeader={() => (
               <TouchableOpacity
@@ -248,9 +248,9 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
           onPress={() => setIsModalVisible(true)} // Open modal on zoom button click
           className="absolute right-4 bottom-4 bg-gray-400 p-2 rounded-full opacity-40"
         >
-        
-      <Image source={icons.zoom} className="w-6 h-6 opacity-100" resizeMode="contain"   tintColor={"black"}/>
- 
+
+          <Image source={icons.zoom} className="w-6 h-6 opacity-100" resizeMode="contain" tintColor={"black"} />
+
         </TouchableOpacity>
       </TouchableOpacity>
     </View>

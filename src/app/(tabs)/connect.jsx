@@ -79,6 +79,23 @@ const Connect = () => {
 
           {/* User Email */}
           {user && <Text className="text-sm text-white bg-red-500">{user.email}</Text>}
+
+          <View className="px-4 w-full ">
+            <View className="mt-8 mb-4 p-4 bg-black-100 rounded-lg w-full items-center ">
+              <Text className="text-white text-lg font-pregular mb-2">Sponsored by</Text>
+              <TouchableOpacity onPress={() => Linking.openURL("https://www.instagram.com/uswa_alansar/")}
+                className="flex flex-col items-center justify-center"
+              >
+                <Image
+                  source={images.uswa}
+                  className="w-[50px] h-[50px]"
+                  resizeMode="contain"
+                />
+                <Text className="text-white text-base font-pbold mt-2">USWA UNION</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
         </View>
       </ScrollView>
     </SafeAreaView>
