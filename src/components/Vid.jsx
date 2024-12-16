@@ -1,57 +1,74 @@
-import React from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
-import { Video } from 'expo-av';
+import * as React from 'react';
+import { View, StyleSheet, Button } from 'react-native';
+import { Video, ResizeMode } from 'expo-av';
+import {useEffect, useState} from "react";
 
-const VideoList = ({ videos }) => {
-  return (
-    <FlatList
-      data={videos}
-      keyExtractor={(item, index) => index.toString()}
-      renderItem={({ item }) => <Vid videoUrl={item.uri} />}
-    />
-  );
-};
+export default function Vid() {
+    const video = React.useRef(null);
+    const playerButton = React.useRef(null);
+    const [isMuted, setIsMuted] = useState(true);
+    const [status, setStatus] = React.useState({});
+    const styles = StyleSheet.create({
+        container: {
+            alignItems:"center",
+            justifyContent: "center",
+            height: "100%",
+            width:"100%"
+        },
+        video: {
+            height: "380px",
+            width: "400px"
+        },
+        buttons: {
+            display:"flex",
+            width: "500px",
+            flexDirection: "row",
+            padding:0,
+            margin:0,
+            justifyContent: "flex-start",
+            marginLeft:"200px"
+        },
+        spacing: {
+          marginRight: "16px",
+        }
+    });
 
-const Vid = ({ videoUrl }) => {
-  return (
-    <View style={styles.container}>
-      <Video
-        source={{ uri: videoUrl }}
-        useNativeControls={true}
-        resizeMode="contain"
-        shouldPlay={false}  // Set to true if you want to auto-play
-        style={styles.video}
-      />
-    </View>
-  );
-};
+    useEffect(()=> {
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,  // Add margin to separate each video
-    backgroundColor: '#000',
-  },
-  video: {
-    width: '100%',
-    height: 300,
-  },
-});
+    },[])
 
-const App = () => {
-  const videoData = [
-    { uri: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-    { uri: 'https://www.w3schools.com/html/movie.mp4' },
-    { uri: 'https://www.w3schools.com/html/movie.mp4' },  // Add more URLs as needed
-  ];
-
-  return (
-    <View style={{ flex: 1 }}>
-      <VideoList videos={videoData} />
-    </View>
-  );
-};
-
-export default App;
+    return (
+        <View style={styles.container}>
+            <Video
+                ref={video}
+                style={styles.video}
+                source={{
+                    uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                }}
+                autoPlay
+                useNativeControls
+                resizeMode={ResizeMode.CONTAIN}
+                shouldPlay={true}
+                isMuted={isMuted}
+                onPlaybackStatusUpdate={status => setStatus(() => status)}
+            />
+            <View style={styles.buttons}>
+                <Button
+                    style={styles.button}
+                    ref={playerButton}
+                    title={status.isPlaying ? 'Pause' : 'Play'}
+                    onPress={() =>
+                        status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
+                    }
+                />
+                
+                <Button
+                    style={styles.button}
+                    ref={playerButton}
+                    title={isMuted ? 'Unmute' : 'Mute'}
+                    onPress={() => setIsMuted(!isMuted)}
+                />
+            </View>
+        </View>
+    );
+}

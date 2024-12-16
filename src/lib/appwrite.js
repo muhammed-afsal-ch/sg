@@ -129,19 +129,28 @@ export const getCurrentUser = async () => {
 }
 
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (page = 1, limit = 10) => {
   try {
+    // Calculate offset based on the page number
+    const offset = (page - 1) * limit;
+
+    // Fetch the documents with pagination
     const posts = await databases.listDocuments(
       databaseId,
       postsCollectionID,
-      [Query.orderDesc('$createdAt')]
-    )
+      [
+        Query.orderDesc('$createdAt'),
+        Query.limit(limit),  // Limit the number of posts
+        Query.offset(offset)  // Skip the number of posts based on the page
+      ]
+    );
 
-    return posts.documents
+    return posts.documents;
   } catch (error) {
     console.log(error);
   }
-}
+};
+
 
 export const getLatestPosts = async () => {
   try {
@@ -162,14 +171,14 @@ export const searchPosts = async (query) => {
   try {
     const posts = await databases.listDocuments(
       databaseId,
-      videoCollectionoid,
-      [Query.search('title', query)] // Perform search on 'title'
+      resultsCollectionId,
+      [Query.search('itemcode', Number(query))] // Perform search on 'title'
     );
 
     return posts.documents;
   } catch (error) {
     console.error('Error searching posts:', error);
-    throw new Error(error.message);
+    
   }
 };
 
@@ -258,10 +267,8 @@ export const createVideo = async (form) => {
     const newPost = await databases.createDocument(
       databaseId, videoCollectionoid, ID.unique(),
       {
-        title: form.title,
         thumbnail: thumbnailUrl,
         video: videoUrl,
-        prompt: form.prompt,
         creator: form.userId
       }
     )
@@ -987,6 +994,20 @@ export const getItemByItemcode = async (itemcode) => {
   }
 }
 
+export const getAllPrgrams = async () => {
+  try {
+
+    const program = await databases.listDocuments(
+      databaseId,
+      programsCollectionId,
+    )
+      return program.documents
+  
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const getDistrictScores = async (districtId) => {
   try {
 
@@ -1034,7 +1055,8 @@ export const addNewResult = async (form) => {
       thirdDistrict,
       firstmark,
       secondmark,
-      thirdmark, } = form
+      thirdmark,
+     gradesOnly } = form
 
       // const { category_code } = await getItemByItemcode(itemcode);
 
@@ -1058,6 +1080,7 @@ export const addNewResult = async (form) => {
 
     // const { getThirddristrictScore } = await getDistrictScores(thirddistrict);
 
+    console.log(gradesOnly,"gradeeee");
 
     const categorycode = await getItemByItemcode(itemcode).then(res => {
       return res.category_code;
@@ -1089,6 +1112,7 @@ export const addNewResult = async (form) => {
         firstmark,
         secondmark,
         thirdmark,
+        gradesonly:gradesOnly
       }
     )
 
@@ -1105,7 +1129,7 @@ export const getAllResults = async () => {
     const posts = await databases.listDocuments(
       databaseId,
       resultsCollectionId,
-      [Query.orderDesc('$createdAt')]
+      [Query.orderDesc('$createdAt'), Query.equal('publish', true)]
     )
     return posts.documents
   } catch (error) {
@@ -1272,6 +1296,7 @@ export const updateResult = async (form) => {
       firstmark,
       secondmark,
       thirdmark,
+      gradesOnly,
     } = form;
 
     // Fetch the category code for the item
@@ -1303,6 +1328,7 @@ export const updateResult = async (form) => {
       firstmark,
       secondmark,
       thirdmark,
+      gradesonly:gradesOnly
     };
 
     // Remove any `null` values to avoid overwriting with empty fields
@@ -1362,21 +1388,76 @@ export const getAllDownloadFiles = async () => {
 }
 
 
+// export const createPost = async (form) => {
+//   try {
+//     const [thumbnailUrl] = await Promise.all([
+//       uploadFile(form.thumbnail, 'image'),
+//     ]);
+
+//     const newPost = await databases.createDocument(
+//       databaseId, postsCollectionID, ID.unique(),
+//       {
+//         thumbnail: thumbnailUrl,
+//         caption: form.caption,
+//       }
+//     )
+//     return newPost
+//   } catch (error) {
+//     throw new Error(error)
+//   }
+// }
+
 export const createPost = async (form) => {
   try {
-    const [thumbnailUrl] = await Promise.all([
-      uploadFile(form.thumbnail, 'image'),
-    ]);
+    // Upload all selected images
+    const uploadPromises = form.thumbnails.map((image) =>
+      uploadFile(image, 'image') // Assuming `uploadFile` handles the file upload
+    );
 
+    // Wait for all images to be uploaded
+    const uploadedImageUrls = await Promise.all(uploadPromises);
+
+    // Create a new post document in the database with the array of image URLs
     const newPost = await databases.createDocument(
-      databaseId, postsCollectionID, ID.unique(),
+      databaseId,
+      postsCollectionID,
+      ID.unique(),
       {
-        thumbnail: thumbnailUrl,
+        thumbnail: uploadedImageUrls, // Store the array of image URLs
         caption: form.caption,
       }
-    )
-    return newPost
+    );
+    return newPost;
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};
+
+
+export const uploadFilesToGallery = async (files, galleryStorageId) => {
+  try {
+    if (!Array.isArray(files) || files.length === 0) {
+      throw new Error('No files to upload.');
+    }
+
+    // Upload each file and collect metadata
+    const uploadedFiles = await Promise.all(
+      files.map(async (file, index) => {
+        const fileName = `gallery_upload_${Date.now()}_${index}_${file.name}`; // Generate a unique file name
+
+        // Upload file to Appwrite bucket
+        const uploadedFile = await storage.createFile(galleryStorageId, 'unique()', file, {
+          contentType: file.type || 'application/octet-stream', // Use file's MIME type or default
+        });
+
+        return uploadedFile; // Return metadata of the uploaded file
+      })
+    );
+
+    console.log('Files successfully uploaded:', uploadedFiles);
+    return uploadedFiles; // Return all uploaded file metadata
+  } catch (error) {
+    console.error('Error uploading files to Appwrite:', error);
+    throw error; // Rethrow the error for further handling
+  }
+};

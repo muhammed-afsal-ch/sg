@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, Alert, Modal, ActivityIndicator } from "react-native";
 import ImageViewer from 'react-native-image-zoom-viewer';
 import * as FileSystem from 'expo-file-system';
@@ -6,24 +6,58 @@ import { shareAsync } from 'expo-sharing'; // Import shareAsync for sharing func
 import { Platform } from 'react-native';
 import { useGlobalContext } from "@/context/Globalprovider";
 import { icons } from "../constants";
-import { router } from "expo-router";
+import sargalayamlogo from "../assets/images/sargalayam-logo.png";
 
 const PostCard = ({ caption, thumbnail }) => {
   const { user } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
+  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 }); // State for image dimensions
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+
+
+  // useEffect(() => {
+  //   // Fetch the image dimensions
+  //   Image.getSize(
+  //     thumbnail[0],
+  //     (width, height) => {
+  //       setImageDimensions({ width, height });
+  //     },
+  //     (error) => {
+  //       console.error("Failed to get image dimensions:", error);
+  //     }
+  //   );
+  // }, [thumbnail]);
+
+  useEffect(() => {
+    if (thumbnail && thumbnail.length > 0 && thumbnail[0]) {
+      Image.getSize(
+        thumbnail[0], // Get dimensions of the first thumbnail
+        (width, height) => {
+          setImageDimensions({ width, height });
+        },
+        (error) => {
+          console.error("Failed to get image dimensions:", error);
+        }
+      );
+    } else {
+      console.warn("Thumbnail is undefined or empty.");
+    }
+  }, [thumbnail]);
+  
 
   const handleShare = async () => {
     setIsLoading(true);
 
     try {
       // Step 1: Download the image to local file system
-      const fileUri = FileSystem.documentDirectory + `${item_code}-${item_name}.jpg`;
-      const downloadResult = await FileSystem.downloadAsync(thumbnail, fileUri);
-
+      const fileUri = FileSystem.documentDirectory + `sargalayam_${new Date().getTime()}.jpg`;
+      const downloadResult = await FileSystem.downloadAsync(thumbnail[currentImageIndex], fileUri); // Use currentImageIndex
+      setIsLoading(false);
       // Step 2: Share image with a caption
       await shareAsync(downloadResult.uri, {
-        message: `Check out this item: ${item_name}\nCategory: ${category}`, // This is the caption you want to share
+        message: `Check out this item: ${caption} @Sargalayam App`, // Update this with appropriate caption
       });
 
       setIsLoading(false);
@@ -49,7 +83,7 @@ const PostCard = ({ caption, thumbnail }) => {
           );
 
           await FileSystem.writeAsStringAsync(fileUri, base64, { encoding: FileSystem.EncodingType.Base64 });
-          Alert.alert("Success", "File saved successfully!");
+          Alert.alert("Success", "Image saved successfully!");
         } catch (error) {
           console.error("Error saving file:", error);
           Alert.alert("Error", "Failed to save file.");
@@ -63,50 +97,64 @@ const PostCard = ({ caption, thumbnail }) => {
   }
 
   async function download() {
-    const filename = `${item_code}-${item_name}.jpg`;
+    setIsLoading(true);
+    const filename = `sargalayam_${new Date().getTime()}.jpg`;
+    const activeImage = thumbnail[currentImageIndex]; // Get the active image URL based on the index
+
     try {
       const result = await FileSystem.downloadAsync(
-        thumbnail,
+        activeImage, // Use active image from the thumbnail array
         FileSystem.documentDirectory + filename
       );
 
       const mimetype = result.headers["Content-Type"] || "application/octet-stream";
-      saveFile(result.uri, filename, mimetype); // Pass the correct MIME type
+      saveFile(result.uri, filename, mimetype);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error downloading file:", error);
       Alert.alert("Download Failed", "There was an issue downloading the file.");
+      setIsLoading(false);
     }
   }
 
-  const images = [{
-    url: thumbnail,
+
+  const images = thumbnail.map((imageUrl) => ({
+    url: imageUrl,
     props: {
       enableSwipeDown: true,
-    }
-  },
-  {
-    url: thumbnail,
+    },
+  }));
 
-  }];
 
   const handleImageClick = () => {
-    setIsModalVisible(true); // Show the modal when the image is clicked
+    setIsModalVisible(true);
   };
 
   const closeModal = () => {
-    setIsModalVisible(false); // Hide the modal
+    setIsModalVisible(false);
   };
+
+  const aspectRatio = imageDimensions.width / imageDimensions.height || 1;
 
   return (
     <View className="flex flex-col items-center px-4 mb-14">
       <View className="flex flex-row gap-3 items-start justify-center ">
         <View className="flex justify-center items-center flex-row flex-1">
-          <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+          {/* <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
             <View className="bg-white w-[39px] h-[39px] rounded-lg flex justify-center items-center">
-              <Text className="font-pesemibold text-xl ">SK</Text>
+            <Image
+                  source={images.sargalayamlogo}
+                  className="w-10 h-10 rounded-full"
+                  resizeMode="contain"
+                />
             </View>
-          </View>
+          </View> */}
 
+          <Image
+            source={sargalayamlogo}
+            className="w-10 h-10 rounded-full"
+            resizeMode="contain"
+          />
           <View className="flex justify-center flex-1 ml-3 gap-y-1">
             <Text
               className="font-psemibold text-sm text-white"
@@ -123,24 +171,20 @@ const PostCard = ({ caption, thumbnail }) => {
           </View>
         </View>
 
-        <View className="pt-4 mr-4 flex flex-row gap-2">
+        <View className="mr-4 flex flex-row gap-2">
           <TouchableOpacity onPress={download}>
+            <View className="p-3 rounded-full ">
             <Image source={icons.download} className="w-5 h-5" resizeMode="contain" />
+            </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleShare} className={`ml-4 ${user ? "mr-5" : ""}`}>
+          <TouchableOpacity onPress={handleShare}>
+          <View className="p-3 rounded-full">
             <Image source={icons.share} className="w-5 h-5" resizeMode="contain" />
+          </View>
           </TouchableOpacity>
 
-          {user && (
-            <TouchableOpacity
-              onPress={() => {
-                router.push(`/admin/${item_code}`)
-              }}
-            >
-              <Image source={icons.edit} className="w-5 h-5" resizeMode="contain" />
-            </TouchableOpacity>
-          )}
+
         </View>
       </View>
 
@@ -172,41 +216,104 @@ const PostCard = ({ caption, thumbnail }) => {
           style={{ height: 300 }} // Set a default height for the image
           resizeMode="cover"
         /> */}
-          <View
-        style={{
-          width: "100%",
-          height: 365, // Set a default height for the container
-          borderRadius: 12,
-          overflow: "hidden", // Ensure the ImageViewer respects the container's bounds
-          
-        }}
-        className="mt-3"
-      >
-        <ImageViewer
-          imageUrls={images}
-         // enableSwipeDown={false} // Disable swipe-down since it's not a modal
-         // renderIndicator={() => null} // Hide the image index indicator
-          //renderFooter={() => null} // Remove any footer menu
-          //renderHeader={() => null} // No header for embedded viewer
-          //menuContext={()=> null}
-          //menus={()=> null}
-         // backgroundColor="transparent" // Ensure it blends well with your design
-          style={{ flex: 1 }} // Let it fill the container
-          saveToLocalByLongPress={false}
-        />
-  
-    <TouchableOpacity className="absolute right-4 bottom-4 bg-gray-400 p-2 rounded-full opacity-40" onPress={handleImageClick}>
-      <Image source={icons.zoom} className="w-6 h-6 opacity-100" resizeMode="contain"   tintColor={"black"}/>
+     <View
+  style={{
+    width: "100%", // Full width of the container
+    aspectRatio: aspectRatio,
+    borderRadius: 12,
+    overflow: "hidden", // Ensure the ImageViewer respects the container's bounds
+    position: "relative", // Allow absolute positioning of arrows
+  }}
+  className="mt-3"
+>
+  <ImageViewer
+    imageUrls={images}
+    style={{ flex: 1 }} // Let it fill the container
+    enableImageZoom={false}
+    onChange={(index) => setCurrentImageIndex(index)} // Update current image index
+    saveToLocalByLongPress={false}
+    index={currentImageIndex} // Make sure the index is passed to ImageViewer
+    enablePreload={true}
+    pageAnimateTime={()=>100/2}
+  />
+
+  {/* Left Arrow */}
+  {images.length > 1 && currentImageIndex > 0 && (
+    <TouchableOpacity
+      onPress={() => {
+        // Decrease index to show the previous image
+        setCurrentImageIndex((prev) => Math.max(prev - 1, 0));
+      }}
+      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-400 p-2 rounded-full opacity-60"
+    >
+      <Image
+        source={icons.leftArrow}
+        className="w-6 h-6 opacity-100"
+        resizeMode="contain"
+        tintColor={"black"}
+      />
     </TouchableOpacity>
-      </View>
-        {/* <TouchableOpacity className="absolute right-4 bottom-4">
+  )}
+
+  {/* Right Arrow */}
+  {images.length > 1 && currentImageIndex < images.length - 1 && (
+    <TouchableOpacity
+      onPress={() => {
+        // Increase index to show the next image
+        setCurrentImageIndex((prev) => Math.min(prev + 1, images.length - 1));
+      }}
+      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-400 p-2 rounded-full opacity-60"
+    >
+      <Image
+        source={icons.rightArrow}
+        className="w-6 h-6 opacity-100"
+        resizeMode="contain"
+        tintColor={"black"}
+      />
+    </TouchableOpacity>
+  )}
+
+  <TouchableOpacity
+    className="absolute right-4 bottom-4 bg-gray-400 p-2 rounded-full opacity-40"
+    onPress={handleImageClick}
+  >
+    <Image
+      source={icons.zoom}
+      className="w-6 h-6 opacity-100"
+      resizeMode="contain"
+      tintColor={"black"}
+    />
+  </TouchableOpacity>
+</View>
+
+
+      {/* <TouchableOpacity className="absolute right-4 bottom-4">
           <Image source={icons.zoom} className="w-6 h-6" resizeMode="contain" />
         </TouchableOpacity>
      </TouchableOpacity> */}
 
-      <View className="flex flex-start w-full mt-3">
-        <Text className="text-xl text-white font-amedium ">{caption}</Text>
-      </View>
+<View className="flex flex-start w-full mt-3">
+      <Text
+        className={`text-base text-white font-alight ${
+          !expanded ? 'line-clamp-2' : ''
+        }`}
+        style={{
+          overflow: 'hidden',
+          display: '-webkit-box',
+          WebkitLineClamp: !expanded ? 2 : 'none',
+          WebkitBoxOrient: 'vertical',
+        }}
+      >
+        {caption}
+      </Text>
+      {caption.length > 100 && ( // Adjust this condition based on the length you want
+        <TouchableOpacity onPress={() => setExpanded(!expanded)}>
+          <Text className="text-blue-500 mt-1">
+            {expanded ? 'Read Less' : 'Read More'}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </View>
 
       {/* Modal for ImageViewer */}
       <Modal
@@ -220,9 +327,9 @@ const PostCard = ({ caption, thumbnail }) => {
           enableSwipeDown={true}
           onSwipeDown={closeModal}
           //renderIndicator={() => null} 
-          renderFooter={() => null} 
-          menuContext={()=> null}
-          menus={()=> null}
+          renderFooter={() => null}
+          menuContext={() => null}
+          menus={() => null}
           renderHeader={() => (
             <TouchableOpacity
               onPress={closeModal}

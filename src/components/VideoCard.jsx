@@ -10,6 +10,19 @@ import { icons } from "../constants";
 import { router } from "expo-router";
 
 const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
+
+  const categoriesName = {
+    'G.K': 'General Kiddies',
+    'G.SJ': 'General Sub Junior',
+    'G.J': 'General Junior',
+    'G.S': 'General Senior',
+    'G.SS': 'General Super Senior',
+    'G.G': 'General Group',
+    'T.J': 'Twalaba Junior',
+    'T.S': 'Twalaba Senior',
+    'T.G': 'Twalaba Group'
+  };
+  
   const { user } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
@@ -36,6 +49,7 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
       // Step 1: Download the image to local file system
       const fileUri = FileSystem.documentDirectory + `${item_code}-${item_name}.jpg`;
       const downloadResult = await FileSystem.downloadAsync(thumbnail, fileUri);
+      setIsLoading(false);
 
       // Step 2: Share image with a caption
       await shareAsync(downloadResult.uri, {
@@ -79,6 +93,8 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
   }
 
   async function download() {
+    setIsLoading(true);
+
     const filename = `${item_code}-${item_name}.jpg`;
     try {
       const result = await FileSystem.downloadAsync(
@@ -88,9 +104,11 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
 
       const mimetype = result.headers["Content-Type"] || "application/octet-stream";
       saveFile(result.uri, filename, mimetype); // Pass the correct MIME type
+      setIsLoading(false);
     } catch (error) {
       console.error("Error downloading file:", error);
       Alert.alert("Download Failed", "There was an issue downloading the file.");
+      setIsLoading(false);
     }
   }
 
@@ -130,18 +148,22 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
               className="text-xs text-gray-100 font-pregular"
               numberOfLines={1}
             >
-              {category}
+              {categoriesName[category]}
             </Text>
           </View>
         </View>
 
-        <View className="pt-4 mr-4 flex flex-row gap-2">
+        <View className=" flex flex-row">
           <TouchableOpacity onPress={download}>
+          <View className="p-4 rounded-full">
             <Image source={icons.download} className="w-5 h-5" resizeMode="contain" />
+            </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleShare} className={`ml-4 ${user ? "mr-5" : " "}`}>
+          <TouchableOpacity onPress={handleShare}>
+          <View className="p-4 rounded-full">
             <Image source={icons.share} className="w-5 h-5" resizeMode="contain" />
+            </View>
           </TouchableOpacity>
 
           {user && (
@@ -150,7 +172,9 @@ const VideoCard = ({ item_code, item_name, category, thumbnail }) => {
                 router.push(`/admin/${item_code}`)
               }}
             >
+              <View className="p-4 rounded-full">
               <Image source={icons.edit} className="w-5 h-5" resizeMode="contain" />
+            </View>
             </TouchableOpacity>
           )}
         </View>

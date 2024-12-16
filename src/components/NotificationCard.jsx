@@ -44,8 +44,9 @@ const NotificationCard = ({ title, time, description, downloadLink }) => {
       const { uri } = await downloadResumable.downloadAsync();
 
       // Call save function once the download is complete
-      save(uri, filename, "application/pdf"); // Explicitly set mimeType to 'application/pdf'
-
+      await save(uri, filename, "application/pdf"); // Explicitly set mimeType to 'application/pdf'
+      Alert.alert("Success", "File downloaded successfully!")
+      setModalVisible(false)
       setIsDownloading(false);
     } catch (error) {
       console.error("Download failed:", error);

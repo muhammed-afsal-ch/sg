@@ -14,12 +14,15 @@ import typography from "../assets/images/typography.png";
 import sargatypog from "../assets/images/sargalaya.png";
 import sargachairman from "../assets/images/chairman.jpg";
 import sargaconvener from "../assets/images/convener.jpg";
+import call from "../assets/images/call.png";
+
 
 import sargalayamlogo from "../assets/images/sargalayam-logo.png";
 
 
 export default {
     sargachairman,
+    call,
     sargaconvener,
     sargatypog,
     typography,

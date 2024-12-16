@@ -21,10 +21,8 @@ const Create = () => {
   const { user } = useGlobalContext();
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
-    title: "",
     video: null,
     thumbnail: null,
-    prompt: "",
   });
 
   const openPicker = async (selectType) => {
@@ -48,6 +46,8 @@ const Create = () => {
         result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           quality: 1,
+          allowsEditing: true,
+          aspect: [9, 16],
         });
       } else if (selectType === "video") {
         result = await ImagePicker.launchImageLibraryAsync({
@@ -79,8 +79,6 @@ const Create = () => {
 
   const submit = async () => {
     if (
-      (form.prompt === "") |
-      (form.title === "") |
       !form.thumbnail |
       !form.video
     ) {
@@ -115,13 +113,7 @@ const Create = () => {
       <ScrollView className="px-4 my-6">
         <Text className="text-2xl text-white font-psemibold">Upload Video</Text>
 
-        <FormField
-          title="Video Title"
-          value={form.title}
-          placeholder="Give your video a catchy title..."
-          handleChangeText={(e) => setForm({ ...form, title: e })}
-          otherStyles="mt-10"
-        />
+
 
         <View className="mt-7 space-y-2">
           <Text className="text-base text-gray-100 font-pmedium">
@@ -180,14 +172,7 @@ const Create = () => {
           </TouchableOpacity>
         </View>
 
-        <FormField
-          title="Post body"
-          value={form.prompt}
-          placeholder="The body of your video...."
-          handleChangeText={(e) => setForm({ ...form, prompt: e })}
-          otherStyles="mt-7"
-        />
-
+  
         <CustomButton
           title="Submit & Publish"
           handlePress={submit}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
+import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 import useAppwrite from '@/lib/useAppwrite';
 import { addNewResult, getAllDistrics, getItemByItemcode } from '@/lib/appwrite';
 import { icons } from '@/constants';
@@ -16,6 +16,9 @@ import { useGlobalContext } from "../../context/Globalprovider";
 
 const AddNewResult = () => {
   const { user } = useGlobalContext();
+  const [selectedA, setSelectedA] = useState([]);
+  const [selectedB, setSelectedB] = useState([]);
+  const [selectedC, setSelectedC] = useState([]);
 
   const requestPermission = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -99,7 +102,8 @@ const AddNewResult = () => {
     totalFirstDistrictMarks: 0,
     totalSecondDistrictMarks: 0,
     totalThirdDistrictMarks: 0,
-    adminId:  user.$id,
+    adminId: user.$id,
+    gradeAOnly: ""
   });
 
 
@@ -215,6 +219,8 @@ const AddNewResult = () => {
         secondmark: totalSecondDistrictMarks,
         thirdmark: totalThirdDistrictMarks,
         adminId: user.$id,
+        gradesOnly:[`{ "A": [${selectedA}], "B": [${selectedB}], "C": [${selectedC}] }`]
+       // gradesOnly: [`{A:${selectedA},B:${selectedB},C:${selectedC}}`]
       };
 
       const addResult = await addNewResult(resultObject);
@@ -244,8 +250,11 @@ const AddNewResult = () => {
         totalSecondDistrictMarks: 0,
         totalThirdDistrictMarks: 0,
         publish: false,
-        adminId:  user.$id,
+        adminId: user.$id,
       })
+      setSelectedA([]);
+      setSelectedB([]);
+      setSelectedC([]);
     }
 
   }
@@ -367,6 +376,92 @@ const AddNewResult = () => {
           {renderDropdown('Third District', 'thirdDistrict', 'thirdGrade')}
           {/* <Button title="Reset All Dropdowns" onPress={handleButtonClick} /> */}
 
+<View className="w-[100%]">
+  <View style={{ padding: 16 }}>
+    <Text className="text-base text-gray-100 font-pmedium">A Grade only</Text>
+    <MultiSelect
+      style={styles.dropdownOnly}
+      placeholderStyle={styles.placeholderStyle}
+      selectedTextStyle={styles.selectedTextStyle}
+      search
+      data={transformedData}
+      labelField="label"
+      valueField="value"
+      placeholder="Select item"
+      searchPlaceholder="Search..."
+      value={selectedA}
+      onChange={item => {
+        setSelectedA(item);
+        // Remove selected items from B and C grade options
+        setSelectedB(selectedB.filter(i => !item.includes(i)));
+        setSelectedC(selectedC.filter(i => !item.includes(i)));
+      }}
+      mode='modal'
+      activeColor='lightgreen'
+      selectedStyle={{
+        borderRadius: 12,
+        backgroundColor: "white"
+      }}
+    />
+  </View>
+
+  <View style={{ padding: 16 }}>
+    <Text className="text-base text-gray-100 font-pmedium">B Grade only</Text>
+    <MultiSelect
+      style={styles.dropdownOnly}
+      placeholderStyle={styles.placeholderStyle}
+      selectedTextStyle={styles.selectedTextStyle}
+      search
+      data={transformedData.filter(item => !selectedA.includes(item.value) && !selectedC.includes(item.value))}
+      labelField="label"
+      valueField="value"
+      placeholder="Select item"
+      searchPlaceholder="Search..."
+      value={selectedB}
+      onChange={item => {
+        setSelectedB(item);
+        // Remove selected items from A and C grade options
+        setSelectedA(selectedA.filter(i => !item.includes(i)));
+        setSelectedC(selectedC.filter(i => !item.includes(i)));
+      }}
+      mode='modal'
+      activeColor='lightgreen'
+      selectedStyle={{
+        borderRadius: 12,
+        backgroundColor: "white"
+      }}
+    />
+  </View>
+
+  <View style={{ padding: 16 }}>
+    <Text className="text-base text-gray-100 font-pmedium">C Grade only</Text>
+    <MultiSelect
+      style={styles.dropdownOnly}
+      placeholderStyle={styles.placeholderStyle}
+      selectedTextStyle={styles.selectedTextStyle}
+      search
+      data={transformedData.filter(item => !selectedA.includes(item.value) && !selectedB.includes(item.value))}
+      labelField="label"
+      valueField="value"
+      placeholder="Select item"
+      searchPlaceholder="Search..."
+      value={selectedC}
+      onChange={item => {
+        setSelectedC(item);
+        // Remove selected items from A and B grade options
+        setSelectedA(selectedA.filter(i => !item.includes(i)));
+        setSelectedB(selectedB.filter(i => !item.includes(i)));
+      }}
+      mode='modal'
+      activeColor='lightgreen'
+      selectedStyle={{
+        borderRadius: 12,
+        backgroundColor: "white"
+      }}
+    />
+  </View>
+</View>
+
           <View className="flex flex-row  w-full gap-1 justify-evenly  px-4 mt-4  mb-[20px]">
             <CustomButton
               title="Waitlist"
@@ -404,10 +499,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
+  dropdownOnly:{
+    height: 50,
+    borderColor: 'gray',
+    backgroundColor: "white",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
   placeholderStyle: {
     fontSize: 14,
   },
   selectedTextStyle: {
     fontSize: 14,
   },
+
 });

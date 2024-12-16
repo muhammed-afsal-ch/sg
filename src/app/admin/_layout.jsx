@@ -11,7 +11,7 @@ export default function ResultAddLayout() {
   //Handle back button press without alert
   useEffect(() => {
     const backAction = () => {
-      router.replace("/home"); // Redirect to home screen or previous page
+      router.back(); // Redirect to home screen or previous page
       return true; // Prevent default back action
     };
 
@@ -82,6 +82,17 @@ export default function ResultAddLayout() {
         },
         title: "Edit Result",
       }} />
+
+<Stack.Screen name="addtogallery" options={{
+        headerStyle: {
+        backgroundColor: "#161622",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+        fontWeight: "bold",
+        },
+        title: "Add To Gallery",
+      }}/>
 
     </Stack>
 

@@ -1,52 +1,77 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Alert, FlatList, Image, ImageBackground, TouchableOpacity, ActivityIndicator, Text, View } from "react-native";
 import { ResizeMode, Video } from "expo-av"; // Importing Video from expo-av
 import * as Animatable from "react-native-animatable";
-import {
-  FlatList,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-  Text
-} from "react-native";
-
+import * as FileSystem from "expo-file-system";
+import { shareAsync } from 'expo-sharing';
 import { icons } from "../constants";
-import Vid from "./Vid";
 
-// Zoom animations for the trending items
 const zoomIn = {
-  0: {
-    scale: 0.9,
-  },
-  1: {
-    scale: 1,
-  },
+  0: { scale: 0.9 },
+  1: { scale: 1 },
 };
 
 const zoomOut = {
-  0: {
-    scale: 1,
-  },
-  1: {
-    scale: 0.9,
-  },
+  0: { scale: 1 },
+  1: { scale: 0.9 },
 };
 
-// Component for each individual trending item
 const TrendingItem = ({ activeItem, item }) => {
   const [play, setPlay] = useState(false);
   const [videoStatus, setVideoStatus] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePlayToggle = () => {
     setPlay((prevState) => !prevState);
   };
 
   const handlePause = () => {
-    setPlay(false);  // Set play state to false when paused
+    setPlay(false); // Set play state to false when paused
   };
 
   const handleError = (error) => {
     console.error("Video error: ", error);
   };
+
+  const handleShare = async () => {
+    if (!item?.video) {
+      Alert.alert("Error", "No valid file to share.");
+      return;
+    }
+  
+    setIsLoading(true);
+  
+    try {
+      // Use a temporary cache directory for the downloaded file
+      const fileExtension = "mp4"; // Assuming video files are always mp4
+      const fileUri = FileSystem.cacheDirectory + `trending_${new Date().getTime()}.${fileExtension}`;
+  
+      // Download the video file
+      const downloadResult = await FileSystem.downloadAsync(item.video, fileUri);
+  
+      if (downloadResult.status !== 200) {
+        throw new Error("Failed to download the file.");
+      }
+  
+      // Define your caption message
+      const captionMessage = `Check out this video! 🌟\n\nRead more or visit our app: Sargalayam`;
+  
+      // Share the downloaded video with the caption
+      await shareAsync(downloadResult.uri, {
+        message: captionMessage, // Caption text
+      });
+      
+  
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error in handleShare:", error);
+  
+      // Show a user-friendly alert
+      Alert.alert("Error", "Failed to share the file. Please try again.");
+      setIsLoading(false);
+    }
+  };
+  
 
   return (
     <Animatable.View
@@ -54,39 +79,31 @@ const TrendingItem = ({ activeItem, item }) => {
       animation={activeItem === item.$id ? zoomIn : zoomOut}
       duration={500}
     >
+      {isLoading && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <ActivityIndicator size="large" color="#3178f4" />
+        </View>
+      )}
       {play ? (
         <>
-          {/* <Video
-            source={{ uri: item.video }} // Ensure this URI is correct
+          <Video
+            source={{ uri: item.video }}
             style={{
               width: 208,
               height: 288,
               borderRadius: 33,
-              backgroundColor: "black", // Ensure video background is black while loading
-            }}
-            resizeMode={ResizeMode.CONTAIN}
-            useNativeControls
-            shouldPlay={play}
-            onPlaybackStatusUpdate={(status) => {
-              setVideoStatus(status);
-              if (status.didJustFinish) {
-                setPlay(false); // Automatically stop when finished
-              }
-              if (status.isPlaying === false) {
-                handlePause(); // Handle pausing and show thumbnail
-              }
-            }}
-            onError={handleError} // Handle errors if video doesn't load
-          /> */}
-
-          <Video
-            //className="w-52 h-72 rounded-[33px] mt-3 bg-white/10"
-            source={{ uri: item.video }}
-           style={{
-              width: 208,
-              height: 288,
-              borderRadius: 33,
-              backgroundColor: "black", // Ensure video background is black while loading
+              backgroundColor: "black",
             }}
             resizeMode={ResizeMode.CONTAIN}
             useNativeControls
@@ -97,11 +114,28 @@ const TrendingItem = ({ activeItem, item }) => {
                 setPlay(false);
               }
               if (status.isPlaying === false) {
-                handlePause(); // Handle pausing and show thumbnail
+                handlePause();
               }
-              onError={handleError}
             }}
+            onError={handleError}
           />
+          <TouchableOpacity
+            onPress={handleShare}
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              backgroundColor: "transparent",
+              borderColor: "gray",
+              borderRadius: 50,
+              padding: 10,
+              zIndex: 2,
+            }}
+          >
+            <View className="p-3 rounded-full">
+              <Image source={icons.share} style={{ width: 20, height: 20 }} resizeMode="contain" />
+            </View>
+          </TouchableOpacity>
         </>
       ) : (
         <TouchableOpacity
@@ -116,7 +150,6 @@ const TrendingItem = ({ activeItem, item }) => {
             className="w-52 h-72 rounded-[33px] my-5 overflow-hidden shadow-lg shadow-black/40"
             resizeMode="cover"
           />
-
           <Image
             source={icons.play}
             className="w-12 h-12 absolute"
@@ -137,9 +170,6 @@ const Trending = ({ posts }) => {
     }
   };
 
-  const videoUrl = 'https://www.w3schools.com/html/mov_bbb.mp4';  // Example video URL
-
-
   return (
     <>
       <FlatList
@@ -155,8 +185,6 @@ const Trending = ({ posts }) => {
         }}
         contentOffset={{ x: 170 }}
       />
-      <Vid videoUrl={videoUrl} />
-
     </>
   );
 };

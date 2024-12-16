@@ -1,8 +1,9 @@
 {
   "expo": {
     "scheme": "acme",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "orientation": "default",
+    
     "web": {
       "output": "static",
       "bundler": "metro"

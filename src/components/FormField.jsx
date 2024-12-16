@@ -22,7 +22,7 @@ const FormField = ({
     <View className={`space-y-2 ${otherStyles}`}>
       <Text className={`text-base font-pmedium ${titleStyles ? titleStyles : 'text-gray-100'}`}>{title}</Text>
 
-      <View className={`w-full h-16 ${title === 'Message' ? "h-40 items-start" : 'h-16 item-center'} px-4 bg-black-100 rounded-2xl ${edit === false ? "border-1 border-blue-300 opacity-95	" : "border-2 border-black-200"}  focus:border-secondary flex flex-row `}>
+      <View className={`w-full h-16 ${title === 'Message' || title === "Post caption" ? "h-40 items-start" : 'h-16 item-center'} px-4 bg-black-100 rounded-2xl ${edit === false ? "border-1 border-blue-300 opacity-95	" : "border-2 border-black-200"}  focus:border-secondary flex flex-row `}>
         <TextInput
           className="flex-1 text-white font-psemibold text-base"
           value={value}
@@ -31,9 +31,9 @@ const FormField = ({
           onChangeText={handleChangeText}
           secureTextEntry={title === "Password" && !showPassword}
           {...props}
-          keyboardType={keyboardType}
-          multiline={title === "Message" ? true : false}
-          numberOfLines={title === "Message" ? 4 : 1} 
+          keyboardType={keyboardType || "default"}
+          multiline={title === "Message" || title === "Post caption" ? true : false}
+          numberOfLines={title === "Message" || title === "Post caption" ? 4 : 1}
           editable={edit}
           onBlur={onBlurFunction}
         />
